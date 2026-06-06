@@ -22,8 +22,8 @@
         * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s, color 0.3s; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-color); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
 
-        #login-screen { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 20px; }
-        .auth-card { background: var(--card-bg); width: 100%; max-width: 520px; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.35); overflow: hidden; color: var(--text); }
+        #login-screen { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: flex-start; z-index: 9999; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .auth-card { background: var(--card-bg); width: 100%; max-width: 520px; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.35); overflow: hidden; color: var(--text); margin: auto; margin-top: 20px; margin-bottom: 20px; }
         .auth-header { display:flex; flex-direction:column; align-items:center; padding:28px 24px 20px; border-bottom:1px solid rgba(255,255,255,0.1);
             background: var(--brand-gradient); color: var(--form-white); text-align:center; position:relative; overflow:hidden; }
         .auth-header::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%); animation: header-shine 6s ease-in-out infinite; pointer-events:none; }
@@ -419,8 +419,8 @@
             button.sm { padding: 4px 8px; font-size: 0.75rem; }
 
             /* --- Auth / Login --- */
-            #login-screen { padding: 10px; align-items: flex-start; padding-top: 5vh; }
-            .auth-card { max-width: 100%; border-radius: 10px; }
+            #login-screen { padding: 10px; align-items: flex-start; padding-top: 2vh; padding-bottom: 30px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+            .auth-card { max-width: 100%; border-radius: 10px; overflow: visible; max-height: none; margin-bottom: 20px; }
             .auth-header { padding: 20px 16px 14px; }
             .auth-logo { width: 44px; height: 44px; border-radius: 10px; }
             .auth-title { font-size: 0.9rem; letter-spacing: 1px; }
@@ -428,7 +428,7 @@
             .auth-version-badge { font-size: 0.6rem; padding: 2px 10px; }
             .auth-tabs { padding: 8px 12px; gap: 4px; }
             .auth-tab { padding: 8px 6px; font-size: 0.78rem; border-radius: 6px; }
-            .auth-body { padding: 14px 16px; }
+            .auth-body { padding: 14px 16px; padding-bottom: 24px; }
             .auth-actions { flex-direction: column; gap: 8px; }
             .auth-actions button { width: 100%; }
 
@@ -561,13 +561,14 @@
             .stat-label { font-size: 0.68rem; }
 
             /* --- Auth --- */
-            #login-screen { padding: 6px; padding-top: 3vh; }
+            #login-screen { padding: 6px; padding-top: 1vh; padding-bottom: 24px; overflow-y: auto; -webkit-overflow-scrolling: touch; align-items: flex-start; }
+            .auth-card { overflow: visible; max-height: none; }
             .auth-header { padding: 16px 12px 10px; }
             .auth-brand { gap: 10px; }
             .auth-logo { width: 38px; height: 38px; }
             .auth-title { font-size: 0.78rem; }
             .auth-tab { font-size: 0.7rem; padding: 6px 4px; }
-            .auth-body { padding: 10px 12px; }
+            .auth-body { padding: 10px 12px; padding-bottom: 20px; }
 
             /* --- Chat compact --- */
             .chat-container { min-height: 300px; }
