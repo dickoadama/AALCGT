@@ -661,72 +661,20 @@
                     <div id="auth-error-login" class="auth-error"></div>
                 </div>
 
-                <!-- REGISTER ENRICHI -->
+                <!-- REGISTER SIMPLIFIÉ -->
                 <div id="auth-form-register" class="auth-form">
                     <h3 style="margin-top:0; margin-bottom:10px;">Créer un compte</h3>
-                    <div class="register-steps">
-                        <div class="register-step active" id="reg-step-btn-1" onclick="showRegStep(1)">1️⃣ Identifiants</div>
-                        <div class="register-step" id="reg-step-btn-2" onclick="showRegStep(2)">2️⃣ Personnel</div>
-                        <div class="register-step" id="reg-step-btn-3" onclick="showRegStep(3)">3️⃣ Professionnel</div>
-                    </div>
-                    <!-- Étape 1: Identifiants -->
+                    <p style="color:#666; font-size:0.85rem; margin-bottom:14px;">Remplissez ces quelques champs pour rejoindre l'association. Vous pourrez compléter votre profil ensuite.</p>
                     <div class="register-panel active" id="reg-panel-1">
                         <input type="text" id="reg-username" placeholder="Nom d'utilisateur *" />
-                        <input type="email" id="reg-email" placeholder="Adresse email *" />
+                        <input type="text" id="reg-fullname" placeholder="Nom complet (Prénom + Nom) *" />
+                        <input type="tel" id="reg-phone" placeholder="Numéro de téléphone *" />
+                        <input type="email" id="reg-email" placeholder="Adresse email" />
                         <input type="password" id="reg-password" placeholder="Mot de passe (min 6) *" />
                         <input type="password" id="reg-password-confirm" placeholder="Confirmer le mot de passe *" />
-                        <div style="display:flex;gap:8px;margin-top:8px;">
-                            <button onclick="showRegStep(2)" style="flex:1;">Suivant ➡️</button>
-                            <button class="ghost" onclick="(window.showAuthTab||function(t){} )('login')" style="flex:1;">Retour</button>
-                        </div>
-                    </div>
-                    <!-- Étape 2: Infos personnelles -->
-                    <div class="register-panel" id="reg-panel-2">
-                        <input type="text" id="reg-fullname" placeholder="Nom complet (Prénom + Nom) *" />
-                        <input type="tel" id="reg-phone" placeholder="Numéro de téléphone (ex: +225 07 XX XX XX) *" />
-                        <input type="text" id="reg-address" placeholder="Adresse géographique (Ville, Quartier) *" />
-                        <input type="date" id="reg-birth" />
-                        <select id="reg-gender">
-                            <option value="">-- Sexe --</option>
-                            <option value="M">Masculin</option>
-                            <option value="F">Féminin</option>
-                        </select>
-                        <input type="text" id="reg-city" placeholder="Ville de résidence actuelle" />
-                        <div style="display:flex;gap:8px;margin-top:8px;">
-                            <button class="ghost" onclick="showRegStep(1)" style="flex:1;">⬅️ Précédent</button>
-                            <button onclick="showRegStep(3)" style="flex:1;">Suivant ➡️</button>
-                        </div>
-                    </div>
-                    <!-- Étape 3: Infos professionnelles -->
-                    <div class="register-panel" id="reg-panel-3">
-                        <select id="reg-status">
-                            <option value="">-- Statut professionnel * --</option>
-                            <option value="emploi">💼 En poste (salarié)</option>
-                            <option value="recherche">🔍 En recherche d'emploi</option>
-                            <option value="stage">🎓 En stage</option>
-                            <option value="etudiant">📚 Étudiant</option>
-                            <option value="independant">🧑‍💻 Indépendant / Freelance</option>
-                            <option value="entrepreneur">🏢 Entrepreneur</option>
-                            <option value="retraite">👴 Retraité</option>
-                        </select>
-                        <input type="text" id="reg-job" placeholder="Poste occupé / Poste recherché *" />
-                        <input type="text" id="reg-company" placeholder="Entreprise actuelle (ou 'N/A')" />
-                        <input type="text" id="reg-sector" placeholder="Secteur d'activité (ex: IT, Finance, Santé...)" />
-                        <select id="reg-level">
-                            <option value="">-- Niveau d'études --</option>
-                            <option value="BAC">BAC</option>
-                            <option value="BAC+2">BAC+2 (BTS/DUT)</option>
-                            <option value="BAC+3">BAC+3 (Licence)</option>
-                            <option value="BAC+5">BAC+5 (Master)</option>
-                            <option value="BAC+8">BAC+8 (Doctorat)</option>
-                        </select>
-                        <textarea id="reg-experience" rows="3" placeholder="Expérience professionnelle résumée (années, domaines, réalisations...)"></textarea>
-                        <input type="text" id="reg-skills" placeholder="Compétences clés (séparées par virgule)" />
-                        <input type="text" id="reg-promo" placeholder="Promotion / Année (ex: 2020)" />
-                        <textarea id="reg-bio" rows="2" placeholder="Bio / À propos de moi (visible par tous les membres)"></textarea>
-                        <div style="display:flex;gap:8px;margin-top:8px;">
-                            <button class="ghost" onclick="showRegStep(2)" style="flex:1;">⬅️ Précédent</button>
+                        <div style="display:flex;gap:8px;margin-top:12px;">
                             <button onclick="registerUser()" style="flex:1;">✅ S'inscrire</button>
+                            <button class="ghost" onclick="(window.showAuthTab||function(t){} )('login')" style="flex:1;">Retour</button>
                         </div>
                     </div>
                     <div id="auth-error-register" class="auth-error"></div>
@@ -1453,22 +1401,15 @@
         function registerUser(){
             var u=document.getElementById('reg-username').value.trim(),e=document.getElementById('reg-email').value.trim(),p=document.getElementById('reg-password').value,pc=document.getElementById('reg-password-confirm').value;
             var errEl=document.getElementById('auth-error-register'),sucEl=document.getElementById('auth-success-register');errEl.style.display='none';sucEl.style.display='none';
-            var fullname=document.getElementById('reg-fullname').value.trim(),phone=document.getElementById('reg-phone').value.trim(),address=document.getElementById('reg-address').value.trim();
-            var birth=document.getElementById('reg-birth').value,gender=document.getElementById('reg-gender').value,city=document.getElementById('reg-city').value.trim();
-            var status=document.getElementById('reg-status').value,job=document.getElementById('reg-job').value.trim(),company=document.getElementById('reg-company').value.trim();
-            var sector=document.getElementById('reg-sector').value.trim(),level=document.getElementById('reg-level').value;
-            var experience=document.getElementById('reg-experience').value.trim(),skills=document.getElementById('reg-skills').value.trim();
-            var promo=document.getElementById('reg-promo').value.trim(),bio=document.getElementById('reg-bio').value.trim();
-            if(!u||!e||!p){errEl.innerText='Identifiants requis (étape 1).';errEl.style.display='block';showRegStep(1);return;}
-            if(p.length<6){errEl.innerText='Mot de passe min 6 caractères.';errEl.style.display='block';showRegStep(1);return;}
-            if(p!==pc){errEl.innerText='Mots de passe différents.';errEl.style.display='block';showRegStep(1);return;}
-            if(users.find(function(x){return x.username===u;})){errEl.innerText='Ce nom d\'utilisateur existe déjà.';errEl.style.display='block';showRegStep(1);return;}
-            if(!fullname||!phone||!address){errEl.innerText='Nom, téléphone et adresse requis (étape 2).';errEl.style.display='block';showRegStep(2);return;}
-            if(!status||!job){errEl.innerText='Statut et poste requis (étape 3).';errEl.style.display='block';showRegStep(3);return;}
-            var newUser={id:Date.now(),username:u,password:p,name:fullname,role:'membre',email:e,phone:phone,address:address,birth:birth,gender:gender,city:city,proStatus:status,job:job,company:company,sector:sector,level:level,experience:experience,skills:skills,promo:promo,bio:bio,joinDate:new Date().toLocaleDateString('fr-FR')};
+            var fullname=document.getElementById('reg-fullname').value.trim(),phone=document.getElementById('reg-phone').value.trim();
+            if(!u||!fullname||!phone||!p){errEl.innerText='Veuillez remplir tous les champs obligatoires (*).';errEl.style.display='block';return;}
+            if(p.length<6){errEl.innerText='Mot de passe min 6 caractères.';errEl.style.display='block';return;}
+            if(p!==pc){errEl.innerText='Mots de passe différents.';errEl.style.display='block';return;}
+            if(users.find(function(x){return x.username===u;})){errEl.innerText='Ce nom d\'utilisateur existe déjà.';errEl.style.display='block';return;}
+            var newUser={id:Date.now(),username:u,password:p,name:fullname,role:'membre',email:e,phone:phone,address:'',birth:'',gender:'',city:'',proStatus:'',job:'',company:'',sector:'',level:'',experience:'',skills:'',promo:'',bio:'',joinDate:new Date().toLocaleDateString('fr-FR')};
             users.push(newUser);saveData();
-            sucEl.innerText='✅ Compte créé avec succès! Vous pouvez maintenant vous connecter.';sucEl.style.display='block';
-            setTimeout(function(){showAuthTab('login');},3000);
+            sucEl.innerText='✅ Compte créé avec succès ! Vous pouvez maintenant vous connecter.';sucEl.style.display='block';
+            setTimeout(function(){showAuthTab('login');},2500);
         }
         function showProfileTab(tab){
             var tabs=['my','annuaire','edit'];
