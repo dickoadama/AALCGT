@@ -104,6 +104,10 @@
         main { flex: 1; padding: 2rem; max-width: 1600px; margin: 0 auto; width: 100%; }
         .section { display: none; animation: fadeIn 0.3s ease; }
         .section.active { display: block; }
+        .section-hero { display:flex; gap:16px; align-items:center; background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin:0 0 18px; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+        .section-hero img { width:120px; height:90px; object-fit:cover; border-radius:10px; flex-shrink:0; }
+        .section-hero h3 { margin:0 0 6px; color:var(--primary); }
+        .section-hero p { margin:0; color:#666; font-size:0.9rem; line-height:1.45; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         h2 { border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--text); }
@@ -631,7 +635,7 @@
         <div class="auth-card">
             <div class="auth-header">
                 <div class="auth-brand">
-                    <img src="logo.jpeg" alt="Logo" class="auth-logo" />
+                    <img src="assets/images/11.jpeg" alt="Logo" class="auth-logo" />
                     <span class="auth-title">AUBE DES ANCIENS DU LYCÉE COFFI GADEAU TIEBISSOU</span>
                 </div>
                 <div class="auth-subtitle">Association des Anciens Élèves</div>
@@ -705,7 +709,7 @@
         <header>
             <div class="header-left">
                 <span class="logo-wrapper" id="logo-btn" aria-haspopup="true" aria-expanded="false" title="Menu rapide" style="cursor:pointer; flex-shrink:0;">
-                    <img src="logo.jpeg" alt="Logo" class="header-logo" />
+                    <img src="assets/images/11.jpeg" alt="Logo" class="header-logo" />
                 </span>
                 <div id="logo-menu" class="logo-menu" role="menu" aria-hidden="true">
                     <button class="logo-menu-item" onclick="showSection('dashboard')">🏠 Accueil</button>
@@ -748,10 +752,17 @@
             <div id="dashboard" class="section active">
                 <div class="ticker">🚨 URGENT : L'assemblée générale est avancée au 15 du mois. Veuillez confirmer votre présence.</div>
                 <h2>📊 Centre de Commandement</h2>
+                <div class="section-hero">
+                    <img src="assets/images/1.jpeg" alt="Activités de l'association" />
+                    <div>
+                        <h3>🧡 Vie associative en images</h3>
+                        <p>Des visuels locaux mettent en avant les moments forts de l'association et les membres mobilisés.</p>
+                    </div>
+                </div>
                 <div class="illustrations" style="display:flex;gap:12px;margin:12px 0;">
-                    <img class="theme-illustration" src="assets/images/illustration1-light.jpg" data-light="assets/images/illustration1-light.jpg" data-dark="assets/images/illustration1-dark.jpg" alt="Réunion" style="width:33%; border-radius:8px; height:120px; object-fit:cover;">
-                    <img class="theme-illustration" src="assets/images/illustration2-light.jpg" data-light="assets/images/illustration2-light.jpg" data-dark="assets/images/illustration2-dark.jpg" alt="Événement" style="width:33%; border-radius:8px; height:120px; object-fit:cover;">
-                    <img class="theme-illustration" src="assets/images/illustration3-light.jpg" data-light="assets/images/illustration3-light.jpg" data-dark="assets/images/illustration3-dark.jpg" alt="Membres" style="width:33%; border-radius:8px; height:120px; object-fit:cover;">
+                    <img class="theme-illustration" src="assets/images/1.jpeg" data-light="assets/images/1.jpeg" data-dark="assets/images/2.jpeg" alt="Réunion" style="width:33%; border-radius:8px; height:120px; object-fit:cover;">
+                    <img class="theme-illustration" src="assets/images/3.jpeg" data-light="assets/images/3.jpeg" data-dark="assets/images/4.jpeg" alt="Événement" style="width:33%; border-radius:8px; height:120px; object-fit:cover;">
+                    <img class="theme-illustration" src="assets/images/5.jpeg" data-light="assets/images/5.jpeg" data-dark="assets/images/6.jpeg" alt="Membres" style="width:33%; border-radius:8px; height:120px; object-fit:cover;">
                 </div>
                 
                 <div class="grid-4">
@@ -792,6 +803,13 @@
             <!-- 💵 CAISSE -->
             <div id="caisse" class="section">
                 <h2>💵 Gestion de la Caisse</h2>
+                <div class="section-hero">
+                    <img src="assets/images/3.jpeg" alt="Suivi de caisse" />
+                    <div>
+                        <h3>💰 Suivi de la caisse</h3>
+                        <p>Les opérations sont illustrées avec des visuels locaux pour mieux suivre les activités financières de l’association.</p>
+                    </div>
+                </div>
                 <div class="grid-3">
                     <div class="card stat-card green"><div class="stat-label">Total Recettes</div><div class="stat-value" id="caisse-recettes">0 FCFA</div></div>
                     <div class="card stat-card red"><div class="stat-label">Total Dépenses</div><div class="stat-value" id="caisse-depenses">0 FCFA</div></div>
@@ -823,6 +841,13 @@
             <!-- 💼 OPPORTUNITÉS ENRICHIES -->
             <div id="opportunites" class="section">
                 <h2>💼 Opportunités & Carrière en Côte d'Ivoire</h2>
+                <div class="section-hero">
+                    <img src="assets/images/4.jpeg" alt="Opportunités professionnelles" />
+                    <div>
+                        <h3>🚀 Opportunités locales</h3>
+                        <p>Chaque offre est accompagnée d’une image plus proche du terrain pour mieux valoriser les parcours des membres.</p>
+                    </div>
+                </div>
                 <div class="opp-stats-grid" id="opp-stats-grid"></div>
                 <div class="opp-tabs">
                     <button class="opp-tab active" onclick="showOppTab('all')" id="opp-tab-all">📋 Tout</button>
@@ -864,6 +889,13 @@
             <!-- 💬 MESSAGES ENRICHIS -->
             <div id="messages" class="section">
                 <h2>💬 Messagerie Avancée</h2>
+                <div class="section-hero">
+                    <img src="assets/images/5.jpeg" alt="Messagerie et échanges" />
+                    <div>
+                        <h3>💬 Communication au cœur de l'association</h3>
+                        <p>Les échanges sont enrichis par des visuels locaux pour rendre les conversations plus vivantes et plus humaines.</p>
+                    </div>
+                </div>
                 <div class="msg-stats-grid" id="msg-stats"></div>
                 <div class="tab-bar">
                     <button class="tab-btn active" onclick="showMsgTab('chat')">💬 Discussions</button>
@@ -923,6 +955,13 @@
             <!-- 👤 PROFIL & ANNUAIRE -->
             <div id="profil" class="section">
                 <h2>👤 Profil & Annuaire des Membres</h2>
+                <div class="section-hero">
+                    <img src="assets/images/6.jpeg" alt="Portrait et annuaire" />
+                    <div>
+                        <h3>👤 Portraits de membres</h3>
+                        <p>L’annuaire et les profils utilisent maintenant des images locales pour donner une identité plus concrète à chaque membre.</p>
+                    </div>
+                </div>
                 <div class="tab-bar">
                     <button class="tab-btn active" onclick="showProfileTab('my')">👤 Mon Profil</button>
                     <button class="tab-btn" onclick="showProfileTab('annuaire')">📖 Annuaire</button>
@@ -1013,6 +1052,13 @@
                         <!-- 🏛️ BUREAU DE L'ASSOCIATION -->
                         <div id="bureau" class="section">
                             <h2>🏛️ Bureau de l'Association</h2>
+                            <div class="section-hero">
+                                <img src="assets/images/7.jpeg" alt="Bureau de l'association" />
+                                <div>
+                                    <h3>🏛️ Une gouvernance illustrée</h3>
+                                    <p>Le bureau et les structures de l’association s’appuient désormais sur des visuels locaux plus adaptés à leur contexte.</p>
+                                </div>
+                            </div>
                             <div class="bureau-org-chart" id="bureau-org-chart"></div>
                             <div id="bureau-admin-zone" style="display:none;">
                                 <h3 style="color:var(--primary);margin-top:20px;">🔐 Mes Membres Assignés</h3>
@@ -1026,6 +1072,13 @@
                         <!-- ⚙️ PARAMÈTRES ENRICHIS -->
             <div id="parametres" class="section">
                 <h2>⚙️ Paramètres & Administration</h2>
+                <div class="section-hero">
+                    <img src="assets/images/8.jpeg" alt="Administration et réglages" />
+                    <div>
+                        <h3>⚙️ Administration visuelle</h3>
+                        <p>Les écrans de gestion et de configuration intègrent aussi des images locales pour améliorer l’expérience globale.</p>
+                    </div>
+                </div>
                 <div class="tab-bar">
                     <button class="tab-btn active" onclick="showSettingsTab('general')">🔧 Général</button>
                     <button class="tab-btn" onclick="showSettingsTab('membres')">👥 Membres</button>
