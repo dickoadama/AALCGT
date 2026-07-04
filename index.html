@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion Association - V14.0 Ultimate Rich UI</title>
+    <title>Gestion Association</title>
     <style>
         :root {
             --primary: #2c3e50; --secondary: #3498db; --accent: #27ae60;
@@ -632,7 +632,7 @@
             <div class="auth-header">
                 <div class="auth-brand">
                     <img src="logo.jpeg" alt="Logo" class="auth-logo" />
-                    <span class="auth-title">AUDE DES ANCIENS DU LYCÉE COFFI GADEAU TIEBISSOU</span>
+                    <span class="auth-title">AUBE DES ANCIENS DU LYCÉE COFFI GADEAU TIEBISSOU</span>
                 </div>
                 <div class="auth-subtitle">Association des Anciens Élèves</div>
                 <div class="auth-version-badge">✦ DICKO VERSION ✦</div>
@@ -717,7 +717,7 @@
                     <button class="logo-menu-item" onclick="exportAllData()">📥 Export</button>
                 </div>
                 <div class="asso-title-wrap">
-                    <span class="asso-title-text" id="app-name-display">🎓 AUDE des Anciens du Lycée Coffi Gadeau Tiebissou</span>
+                    <span class="asso-title-text" id="app-name-display">🎓 AUBE des Anciens du Lycée Coffi Gadeau Tiebissou</span>
                 </div>
             </div>
             <span id="live-clock">00:00:00</span>
@@ -748,6 +748,11 @@
             <div id="dashboard" class="section active">
                 <div class="ticker">🚨 URGENT : L'assemblée générale est avancée au 15 du mois. Veuillez confirmer votre présence.</div>
                 <h2>📊 Centre de Commandement</h2>
+                <div class="illustrations" style="display:flex;gap:12px;margin:12px 0;">
+                    <img class="theme-illustration" src="assets/images/illustration1-light.jpg" data-light="assets/images/illustration1-light.jpg" data-dark="assets/images/illustration1-dark.jpg" alt="Réunion" style="width:33%; border-radius:8px; height:120px; object-fit:cover;">
+                    <img class="theme-illustration" src="assets/images/illustration2-light.jpg" data-light="assets/images/illustration2-light.jpg" data-dark="assets/images/illustration2-dark.jpg" alt="Événement" style="width:33%; border-radius:8px; height:120px; object-fit:cover;">
+                    <img class="theme-illustration" src="assets/images/illustration3-light.jpg" data-light="assets/images/illustration3-light.jpg" data-dark="assets/images/illustration3-dark.jpg" alt="Membres" style="width:33%; border-radius:8px; height:120px; object-fit:cover;">
+                </div>
                 
                 <div class="grid-4">
                     <div class="card stat-card"><div class="stat-label">Membres Actifs</div><div class="stat-value" id="dash-members">0</div><small style="color:var(--accent);">↑ +2 ce mois</small></div>
@@ -1345,7 +1350,7 @@
         ];
         var messages = JSON.parse(localStorage.getItem('asso_messages')) || [];
         var auditLog = JSON.parse(localStorage.getItem('asso_audit')) || [];
-        var settings = JSON.parse(localStorage.getItem('asso_settings')) || { name: 'AUDE des Anciens du Lycee Coffi Gadeau Tiebissou' };
+        var settings = JSON.parse(localStorage.getItem('asso_settings')) || { name: 'AUBE des Anciens du Lycee Coffi Gadeau Tiebissou' };
         var opportunities = JSON.parse(localStorage.getItem('asso_opps')) || [];
         var archives = JSON.parse(localStorage.getItem('asso_archives')) || [];
         var groups = JSON.parse(localStorage.getItem('asso_groups')) || [];
@@ -2260,10 +2265,11 @@ function printReceipt(){
         function clearAuditLog(){if(!confirm('Vider le journal d\'audit?'))return;auditLog=[];saveData();renderAuditLog();}
         function exportAllData(){var b=new Blob([JSON.stringify({users:users,transactions:transactions,messages:messages,settings:settings,auditLog:auditLog,opportunities:opportunities,archives:archives,groups:groups},null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='backup_'+new Date().toISOString().split('T')[0]+'.json';a.click();logAudit('Export complet');}
         function importData(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){try{var d=JSON.parse(e.target.result);if(d.users)users=d.users;if(d.transactions)transactions=d.transactions;if(d.messages)messages=d.messages;if(d.settings)settings=d.settings;if(d.auditLog)auditLog=d.auditLog;if(d.opportunities)opportunities=d.opportunities;if(d.archives)archives=d.archives;if(d.groups)groups=d.groups;saveData();logAudit('Import données');alert('Données importées!');location.reload();}catch(err){alert('Fichier invalide: '+err.message);}};r.readAsText(f);}
-        function toggleDarkMode(){var isD=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',isD?'':'dark');localStorage.setItem('asso_dark',isD?'0':'1');var cb=document.getElementById('set-dark-mode');if(cb)cb.checked=!isD;}
+        function updateThemeImages(){ try{ var isDark=document.documentElement.getAttribute('data-theme')==='dark'; document.querySelectorAll('.theme-illustration').forEach(function(img){ var light=img.getAttribute('data-light'); var dark=img.getAttribute('data-dark'); if(isDark && dark){ if(img.src!==dark)img.src=dark; } else if(light){ if(img.src!==light)img.src=light; } }); }catch(e){console.error('updateThemeImages error',e);} }
+        function toggleDarkMode(){var isD=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',isD?'':'dark');localStorage.setItem('asso_dark',isD?'0':'1');var cb=document.getElementById('set-dark-mode');if(cb)cb.checked=!isD; try{ updateThemeImages(); }catch(e){} }
         function exportTransactionsCSV(){var rows=[['id','date','type','cat','desc','amount','status']];for(var i=0;i<transactions.length;i++){var t=transactions[i];rows.push([t.id,t.date,t.type,t.cat,t.desc,t.amount,t.status]);}var csv=rows.map(function(r){return r.join(',');}).join('\n');var b=new Blob([csv],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tx.csv';a.click();}
         function bulkValidatePending(){if(!canManageCash(currentUser))return alert('Refus.');var ch=0;for(var i=0;i<transactions.length;i++){if(transactions[i].status==='pending'){transactions[i].status='validated';ch++;}}if(ch){saveData();renderTransactions();renderDashboard();alert(ch+' validees');}else{alert('Rien.');}}
-        (function init(){ startClock(); if(localStorage.getItem('asso_dark')==='1')document.documentElement.setAttribute('data-theme','dark'); try{var saved=sessionStorage.getItem('asso_currentUser');if(saved){var s=JSON.parse(saved);var fresh=users.find(function(u){return u.username===s.username&&u.password===s.password;});if(fresh){currentUser=fresh;showApp();}else{sessionStorage.removeItem('asso_currentUser');}}}catch(e){console.log('Auto-login error:',e);} })();
+        (function init(){ startClock(); if(localStorage.getItem('asso_dark')==='1')document.documentElement.setAttribute('data-theme','dark'); try{ updateThemeImages(); }catch(e){} try{var saved=sessionStorage.getItem('asso_currentUser');if(saved){var s=JSON.parse(saved);var fresh=users.find(function(u){return u.username===s.username&&u.password===s.password;});if(fresh){currentUser=fresh;showApp();}else{sessionStorage.removeItem('asso_currentUser');}}}catch(e){console.log('Auto-login error:',e);} })();
     </script>
 </body>
 </html>
