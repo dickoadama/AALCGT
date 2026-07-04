@@ -108,6 +108,10 @@
         .section-hero img { width:120px; height:90px; object-fit:cover; border-radius:10px; flex-shrink:0; }
         .section-hero h3 { margin:0 0 6px; color:var(--primary); }
         .section-hero p { margin:0; color:#666; font-size:0.9rem; line-height:1.45; }
+        .dashboard-slideshow { position:relative; width:100%; height:220px; margin:12px 0 18px; border-radius:14px; overflow:hidden; border:1px solid var(--border); box-shadow:0 4px 14px rgba(0,0,0,0.08); background:var(--bg-color); }
+        .dashboard-slideshow img { width:100%; height:100%; object-fit:cover; display:block; transition:opacity 0.9s ease; }
+        .dashboard-slideshow::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(0,0,0,0.22), rgba(0,0,0,0.04)); pointer-events:none; }
+        .dashboard-slideshow-caption { position:absolute; left:16px; bottom:14px; z-index:1; color:white; font-weight:700; text-shadow:0 2px 8px rgba(0,0,0,0.55); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         h2 { border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--text); }
@@ -756,13 +760,12 @@
                     <img src="assets/images/1.jpeg" alt="Activités de l'association" />
                     <div>
                         <h3>🧡 Vie associative en images</h3>
-                        <p>Des visuels locaux mettent en avant les moments forts de l'association et les membres mobilisés.</p>
+                        <p>Les images locales se succèdent en boucle pour illustrer la dynamique du centre de commandement.</p>
                     </div>
                 </div>
-                <div class="illustrations" style="display:flex;gap:12px;margin:12px 0;">
-                    <img class="theme-illustration" src="assets/images/1.jpeg" data-light="assets/images/1.jpeg" data-dark="assets/images/2.jpeg" alt="Réunion" style="width:33%; border-radius:8px; height:120px; object-fit:cover;">
-                    <img class="theme-illustration" src="assets/images/3.jpeg" data-light="assets/images/3.jpeg" data-dark="assets/images/4.jpeg" alt="Événement" style="width:33%; border-radius:8px; height:120px; object-fit:cover;">
-                    <img class="theme-illustration" src="assets/images/5.jpeg" data-light="assets/images/5.jpeg" data-dark="assets/images/6.jpeg" alt="Membres" style="width:33%; border-radius:8px; height:120px; object-fit:cover;">
+                <div class="dashboard-slideshow" aria-label="Diaporama des activités de l'association">
+                    <img id="dashboard-slide-image" src="assets/images/1.jpeg" alt="Diaporama du centre de commandement" />
+                    <div class="dashboard-slideshow-caption" id="dashboard-slide-caption">Centre de commandement • AALCGT</div>
                 </div>
                 
                 <div class="grid-4">
@@ -1414,6 +1417,35 @@
         function saveData(){ localStorage.setItem('asso_users',JSON.stringify(users)); localStorage.setItem('asso_tx',JSON.stringify(transactions)); localStorage.setItem('asso_messages',JSON.stringify(messages)); localStorage.setItem('asso_settings',JSON.stringify(settings)); localStorage.setItem('asso_audit',JSON.stringify(auditLog)); localStorage.setItem('asso_archives',JSON.stringify(archives)); localStorage.setItem('asso_groups',JSON.stringify(groups)); }
         function logAudit(a){ var entry={time:new Date().toLocaleString('fr-FR'),user:currentUser?currentUser.username:'sys',action:a}; auditLog.unshift(entry); archives.unshift({id:Date.now(),time:new Date().toLocaleString('fr-FR'),user:currentUser?currentUser.username:'sys',action:a,type:'system'}); if(auditLog.length>500)auditLog.length=500; if(archives.length>1000)archives.length=1000; saveData(); }
         function startClock(){ function tick(){var el=document.getElementById('live-clock');if(!el)return;var d=new Date();var heure=d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});var date=d.toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});el.innerHTML=heure+' <span style="opacity:0.5;margin:0 6px;">|</span> '+date;} tick(); setInterval(tick,1000); }
+        function startDashboardSlideshow(){
+            var imageEl=document.getElementById('dashboard-slide-image');
+            var captionEl=document.getElementById('dashboard-slide-caption');
+            if(!imageEl) return;
+            var slides=[
+                {src:'assets/images/1.jpeg', title:'Centre de commandement • AALCGT'},
+                {src:'assets/images/2.jpeg', title:'Événements & rencontres'},
+                {src:'assets/images/3.jpeg', title:'Caisse & suivi des actions'},
+                {src:'assets/images/4.jpeg', title:'Opportunités & parcours'},
+                {src:'assets/images/5.jpeg', title:'Échanges & messagerie'},
+                {src:'assets/images/6.jpeg', title:'Portraits des membres'},
+                {src:'assets/images/7.jpeg', title:'Bureau & gouvernance'},
+                {src:'assets/images/8.jpeg', title:'Administration & organisation'},
+                {src:'assets/images/9.jpeg', title:'Mobilisation de l’association'},
+                {src:'assets/images/10.jpeg', title:'Visuels locaux en continu'}
+            ];
+            var index=0;
+            setInterval(function(){
+                index=(index+1)%slides.length;
+                imageEl.style.opacity='0';
+                setTimeout(function(){
+                    if(!imageEl) return;
+                    imageEl.src=slides[index].src;
+                    imageEl.alt=slides[index].title;
+                    if(captionEl) captionEl.textContent=slides[index].title;
+                    imageEl.style.opacity='1';
+                }, 180);
+            }, 3500);
+        }
         function showAuthTab(tab){ document.querySelectorAll('.auth-tab').forEach(function(t){t.classList.remove('active');}); document.querySelectorAll('.auth-form').forEach(function(f){f.classList.remove('active');}); document.getElementById('tab-btn-'+tab).classList.add('active'); document.getElementById('auth-form-'+tab).classList.add('active'); }
         function login_real(){
             var u=document.getElementById('auth-username').value.trim(), p=document.getElementById('auth-password').value.trim(), errorEl=document.getElementById('auth-error-login');
@@ -1428,6 +1460,7 @@
             showApp(); showSection('dashboard');
         }
         try{window.login=window.login||login_real;}catch(e){}
+        document.addEventListener('DOMContentLoaded', function(){ startDashboardSlideshow(); });
         // Gestionnaires bouton connexion et touche Entrée
         (function(){
             var btn=document.getElementById('btn-login');
