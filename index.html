@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; connect-src 'none'; font-src 'self'; form-action 'self'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; upgrade-insecure-requests">
+    <meta name="referrer" content="no-referrer">
     <title>Gestion Association</title>
     <style>
         :root {
@@ -656,8 +658,8 @@
                 <!-- LOGIN -->
                 <div id="auth-form-login" class="auth-form active">
                     <h3 style="margin-top:0; margin-bottom:10px;">Connexion sécurisée</h3>
-                    <input type="text" id="auth-username" placeholder="Nom d'utilisateur" autocomplete="username" />
-                    <input type="password" id="auth-password" placeholder="Mot de passe" autocomplete="current-password" />
+                    <input type="text" id="auth-username" placeholder="Nom d'utilisateur" autocomplete="username" maxlength="120" />
+                    <input type="password" id="auth-password" placeholder="Mot de passe" autocomplete="current-password" maxlength="128" />
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" id="auth-remember"> Se souvenir</label>
                         <button class="small-link" onclick="(window.showAuthTab||function(t){} )('forgot')">Mot de passe oublié ?</button>
@@ -674,12 +676,12 @@
                     <h3 style="margin-top:0; margin-bottom:10px;">Créer un compte</h3>
                     <p style="color:#666; font-size:0.85rem; margin-bottom:14px;">Remplissez ces quelques champs pour rejoindre l'association. Vous pourrez compléter votre profil ensuite.</p>
                     <div class="register-panel active" id="reg-panel-1">
-                        <input type="text" id="reg-username" placeholder="Nom d'utilisateur *" />
-                        <input type="text" id="reg-fullname" placeholder="Nom complet (Prénom + Nom) *" />
-                        <input type="tel" id="reg-phone" placeholder="Numéro de téléphone *" />
-                        <input type="email" id="reg-email" placeholder="Adresse email" />
-                        <input type="password" id="reg-password" placeholder="Mot de passe (min 6) *" />
-                        <input type="password" id="reg-password-confirm" placeholder="Confirmer le mot de passe *" />
+                        <input type="text" id="reg-username" placeholder="Nom d'utilisateur *" autocomplete="username" maxlength="40" />
+                        <input type="text" id="reg-fullname" placeholder="Nom complet (Prénom + Nom) *" autocomplete="name" maxlength="120" />
+                        <input type="tel" id="reg-phone" placeholder="Numéro de téléphone *" autocomplete="tel" maxlength="30" />
+                        <input type="email" id="reg-email" placeholder="Adresse email" autocomplete="email" maxlength="254" />
+                        <input type="password" id="reg-password" placeholder="Mot de passe (min 10) *" autocomplete="new-password" minlength="10" maxlength="128" />
+                        <input type="password" id="reg-password-confirm" placeholder="Confirmer le mot de passe *" autocomplete="new-password" minlength="10" maxlength="128" />
                         <div style="display:flex;gap:8px;margin-top:12px;">
                             <button onclick="registerUser()" style="flex:1;">✅ S'inscrire</button>
                             <button class="ghost" onclick="(window.showAuthTab||function(t){} )('login')" style="flex:1;">Retour</button>
@@ -902,7 +904,7 @@
                 <div class="msg-stats-grid" id="msg-stats"></div>
                 <div class="tab-bar">
                     <button class="tab-btn active" onclick="showMsgTab('chat')">💬 Discussions</button>
-                    <button class="tab-btn" onclick="showMsgTab('archives')">📦 Archives</button>
+                    <button class="tab-btn admin-only" onclick="showMsgTab('archives')">📦 Archives</button>
                     <button class="tab-btn" onclick="showMsgTab('groupes')">👥 Groupes</button>
                 </div>
                 <div id="msg-tab-chat">
@@ -987,8 +989,8 @@
                     <div class="card" style="margin-top:12px;">
                         <h3>🔒 Changer le mot de passe</h3>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                            <div class="form-group"><label>Ancien mot de passe</label><input type="password" id="old-pwd" /></div>
-                            <div class="form-group"><label>Nouveau mot de passe</label><input type="password" id="new-pwd" /></div>
+                            <div class="form-group"><label>Ancien mot de passe</label><input type="password" id="old-pwd" autocomplete="current-password" maxlength="128" /></div>
+                            <div class="form-group"><label>Nouveau mot de passe</label><input type="password" id="new-pwd" autocomplete="new-password" minlength="10" maxlength="128" /></div>
                         </div>
                         <button class="primary" onclick="changePassword()">Modifier</button>
                     </div>
@@ -1276,7 +1278,7 @@
                     <option value="gestionnaire-crise">🚨 Gestionnaire de situations en crise</option>
                     <option value="organisateur">🎉 Organisateur d'événements</option>
                     </select></div>
-                    <div class="form-group"><label>Mot de passe</label><input type="password" id="m-password" placeholder="Min 6 caractères" /></div>
+                    <div class="form-group"><label>Mot de passe</label><input type="password" id="m-password" placeholder="Min 10 caractères" autocomplete="new-password" minlength="10" maxlength="128" /></div>
                 </div>
                 <h4 style="color:var(--secondary);margin:14px 0 6px;">💼 Informations professionnelles</h4>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
@@ -1359,9 +1361,9 @@
                     <div class="form-group"><label>Date</label><input type="date" id="edit-tx-date" /></div>
                     <div class="form-group"><label>Montant (FCFA)</label><input type="number" id="edit-tx-amount" min="0" /></div>
                 </div>
-                <div class="form-group"><label>Description</label><input type="text" id="edit-tx-desc" placeholder="Description de l'opération" /></div>
+                <div class="form-group"><label>Description</label><input type="text" id="edit-tx-desc" placeholder="Description de l'opération" maxlength="500" /></div>
                 <div class="form-group"><label>Statut</label><select id="edit-tx-status"><option value="validated">✅ Validée</option><option value="pending">⏳ En attente</option><option value="rejected">❌ Rejetée</option></select></div>
-                <div class="form-group"><label>Notes admin (interne)</label><textarea id="edit-tx-notes" rows="2" placeholder="Notes internes..."></textarea></div>
+                <div class="form-group"><label>Notes admin (interne)</label><textarea id="edit-tx-notes" rows="2" placeholder="Notes internes..." maxlength="1000"></textarea></div>
                 <div class="modal-actions">
                     <button class="ghost" onclick="closeEditTxModal()">Annuler</button>
                     <button class="primary" onclick="saveTxEdit()">💾 Enregistrer</button>
@@ -1375,44 +1377,69 @@
     </div>
 
     <script>
-        var defaultUsers = [
-            { id: 1, username: 'superadmin', password: 'super123', name: 'Fondateur', role: 'superadmin', email: 'fondateur@asso.ci', bureauRole: 'fondateur' },
-            { id: 5, username: 'membre', password: 'membre123', name: 'Membre Standard', role: 'membre', email: 'membre@asso.ci' }
-        ];
-        var users = JSON.parse(localStorage.getItem('asso_users')) || defaultUsers;
-        // Fusionner les utilisateurs par défaut manquants
-        (function(){
-            for(var i=0;i<defaultUsers.length;i++){
-                var du=defaultUsers[i];
-                var exists=false;
-                for(var j=0;j<users.length;j++){if(users[j].username===du.username){exists=true;break;}}
-                if(!exists)users.push(JSON.parse(JSON.stringify(du)));
-            }
-            // S'assurer que les identifiants par défaut sont corrects
-            for(var k=0;k<users.length;k++){
-                for(var l=0;l<defaultUsers.length;l++){
-                    if(users[k].username===defaultUsers[l].username&&!users[k].password){
-                        users[k].password=defaultUsers[l].password;
-                    }
-                }
-            }
-            try{localStorage.setItem('asso_users',JSON.stringify(users));}catch(e){}
-        })();
-        var transactions = JSON.parse(localStorage.getItem('asso_tx')) || [
+        var users = readStoredRecords('asso_users');
+        var originalUserCount=users.length;
+        users=users.filter(function(u){return !(u.password&&((u.id===1&&u.username==='superadmin')||(u.id===5&&u.username==='membre')));});
+        if(users.length!==originalUserCount)localStorage.setItem('asso_users',JSON.stringify(users));
+        var hasStoredTransactions=localStorage.getItem('asso_tx')!==null;
+        var transactions = readStoredRecords('asso_tx');
+        if(!hasStoredTransactions)transactions=[
             { id: 1001, date: '2026-01-15', type: 'recette', cat: 'cotisation', desc: 'Cotisation annuelle', amount: 5000, status: 'validated' },
             { id: 1002, date: '2026-01-20', type: 'depense', cat: 'fonctionnement', desc: 'Fournitures bureau', amount: 3500, status: 'validated' },
             { id: 1003, date: '2026-02-01', type: 'recette', cat: 'don', desc: 'Don anonyme', amount: 50000, status: 'validated' },
             { id: 1005, date: '2026-03-05', type: 'depense', cat: 'evenement', desc: 'Location salle AG', amount: 25000, status: 'pending' }
         ];
-        var messages = JSON.parse(localStorage.getItem('asso_messages')) || [];
-        var auditLog = JSON.parse(localStorage.getItem('asso_audit')) || [];
-        var settings = JSON.parse(localStorage.getItem('asso_settings')) || { name: 'AUBE des Anciens du Lycee Coffi Gadeau Tiebissou' };
-        var opportunities = JSON.parse(localStorage.getItem('asso_opps')) || [];
-        var archives = JSON.parse(localStorage.getItem('asso_archives')) || [];
-        var groups = JSON.parse(localStorage.getItem('asso_groups')) || [];
+        var messages = readStoredRecords('asso_messages');
+        var auditLog = readStoredRecords('asso_audit');
+        var settings = readStoredObject('asso_settings',{ name: 'AUBE des Anciens du Lycee Coffi Gadeau Tiebissou' });
+        var opportunities = readStoredRecords('asso_opps');
+        var archives = readStoredRecords('asso_archives');
+        var groups = readStoredRecords('asso_groups');
         var currentUser = null;
         var currentChatTarget = null;
-        function escapeHtml(t){ var d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }
+        var PASSWORD_ITERATIONS = 210000;
+        function readStoredArray(key){try{var value=JSON.parse(localStorage.getItem(key));return Array.isArray(value)?value:[];}catch(e){return [];}}
+        function readStoredRecords(key){return readStoredArray(key).filter(function(item){return item&&typeof item==='object'&&!Array.isArray(item)&&(!Object.prototype.hasOwnProperty.call(item,'id')||typeof item.id==='number'&&Number.isSafeInteger(item.id));});}
+        function readStoredObject(key,fallback){try{var value=JSON.parse(localStorage.getItem(key));return value&&typeof value==='object'&&!Array.isArray(value)?value:fallback;}catch(e){return fallback;}}
+        function escapeHtml(t){ var d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
+        function escapeAttribute(t){return escapeHtml(t).replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+        function isAdmin(u){return !!(u&&(u.role==='admin'||u.role==='superadmin'));}
+        function isSuperAdmin(u){return !!(u&&u.role==='superadmin');}
+        function requireAuth(){if(currentUser)return true;alert('Veuillez vous connecter.');return false;}
+        function requireAdmin(){if(isAdmin(currentUser))return true;alert('Accès administrateur requis.');return false;}
+        function requireSuperAdmin(){if(isSuperAdmin(currentUser))return true;alert('Accès fondateur requis.');return false;}
+        function safeExternalUrl(value){
+            if(!value)return '';
+            try{var url=new URL(value,window.location.href);return url.protocol==='https:'||url.protocol==='http:'?url.href:'';}catch(e){return '';}
+        }
+        function safeMailto(value){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value||'')?'mailto:'+encodeURIComponent(value):'';}
+        function safeTel(value){return /^[+()0-9 .-]{6,30}$/.test(value||'')?'tel:'+encodeURIComponent(value):'';}
+        function bytesToBase64(bytes){var text='';for(var i=0;i<bytes.length;i++)text+=String.fromCharCode(bytes[i]);return btoa(text);}
+        function base64ToBytes(value){var text=atob(value),bytes=new Uint8Array(text.length);for(var i=0;i<text.length;i++)bytes[i]=text.charCodeAt(i);return bytes;}
+        async function derivePassword(password,salt,iterations){
+            var material=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);
+            var bits=await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:salt,iterations:iterations},material,256);
+            return new Uint8Array(bits);
+        }
+        async function setUserPassword(user,password){
+            if(!window.crypto||!crypto.subtle)throw new Error('Le navigateur ne prend pas en charge le stockage sécurisé des mots de passe.');
+            var salt=crypto.getRandomValues(new Uint8Array(16));
+            user.passwordHash=bytesToBase64(await derivePassword(password,salt,PASSWORD_ITERATIONS));
+            user.passwordSalt=bytesToBase64(salt);
+            user.passwordIterations=PASSWORD_ITERATIONS;
+            delete user.password;
+        }
+        async function verifyUserPassword(user,password){
+            if(user.passwordHash&&user.passwordSalt){
+                var actual=await derivePassword(password,base64ToBytes(user.passwordSalt),user.passwordIterations||PASSWORD_ITERATIONS);
+                var expected=base64ToBytes(user.passwordHash),difference=actual.length===expected.length?0:1;
+                for(var i=0;i<Math.min(actual.length,expected.length);i++)difference|=actual[i]^expected[i];
+                return difference===0;
+            }
+            return typeof user.password==='string'&&user.password===password;
+        }
+        function storeSession(user){sessionStorage.setItem('asso_currentUser',JSON.stringify({id:user.id,username:user.username}));}
+        function csvCell(value){var text=String(value==null?'':value);if(/^[=+\-@]/.test(text))text="'"+text;return '"'+text.replace(/"/g,'""')+'"';}
         function canManageCash(u){ return u&&(u.role==='superadmin'||u.role==='admin'||u.bureauRole==='tresorier'||u.canManageCash); }
         function saveData(){ localStorage.setItem('asso_users',JSON.stringify(users)); localStorage.setItem('asso_tx',JSON.stringify(transactions)); localStorage.setItem('asso_messages',JSON.stringify(messages)); localStorage.setItem('asso_settings',JSON.stringify(settings)); localStorage.setItem('asso_audit',JSON.stringify(auditLog)); localStorage.setItem('asso_archives',JSON.stringify(archives)); localStorage.setItem('asso_groups',JSON.stringify(groups)); }
         function logAudit(a){ var entry={time:new Date().toLocaleString('fr-FR'),user:currentUser?currentUser.username:'sys',action:a}; auditLog.unshift(entry); archives.unshift({id:Date.now(),time:new Date().toLocaleString('fr-FR'),user:currentUser?currentUser.username:'sys',action:a,type:'system'}); if(auditLog.length>500)auditLog.length=500; if(archives.length>1000)archives.length=1000; saveData(); }
@@ -1447,14 +1474,16 @@
             }, 3500);
         }
         function showAuthTab(tab){ document.querySelectorAll('.auth-tab').forEach(function(t){t.classList.remove('active');}); document.querySelectorAll('.auth-form').forEach(function(f){f.classList.remove('active');}); document.getElementById('tab-btn-'+tab).classList.add('active'); document.getElementById('auth-form-'+tab).classList.add('active'); }
-        function login_real(){
-            var u=document.getElementById('auth-username').value.trim(), p=document.getElementById('auth-password').value.trim(), errorEl=document.getElementById('auth-error-login');
+        async function login_real(){
+            var u=document.getElementById('auth-username').value.trim(), p=document.getElementById('auth-password').value, errorEl=document.getElementById('auth-error-login');
             if(errorEl)errorEl.style.display='none';
             var user=users.find(function(x){return x.username===u;});
             if(!u||!p){if(errorEl){errorEl.innerText="Remplissez tous les champs.";errorEl.style.display='block';}return;}
-            if(!user||user.password!==p){if(errorEl){errorEl.innerText=!user?"Utilisateur introuvable.":"Mot de passe incorrect.";errorEl.style.display='block';}return;}
+            if(u.length>120||p.length>128){if(errorEl){errorEl.innerText="Identifiants incorrects.";errorEl.style.display='block';}return;}
+            if(!user||!(await verifyUserPassword(user,p))){if(errorEl){errorEl.innerText="Identifiants incorrects.";errorEl.style.display='block';}return;}
+            if(user.password){await setUserPassword(user,p);saveData();}
             currentUser=user;
-            try{sessionStorage.setItem('asso_currentUser',JSON.stringify(currentUser));}catch(e){}
+            try{storeSession(currentUser);}catch(e){}
             logAudit('Connexion');
             try{window.login=login_real;}catch(e){}
             showApp(); showSection('dashboard');
@@ -1464,9 +1493,9 @@
         // Gestionnaires bouton connexion et touche Entrée
         (function(){
             var btn=document.getElementById('btn-login');
-            if(btn){ btn.addEventListener('click', function(e){ e.preventDefault(); try{login_real();}catch(err){alert('Erreur: '+err.message);} }); }
+            if(btn){ btn.addEventListener('click', function(e){ e.preventDefault(); login_real().catch(function(){alert('Connexion impossible.');}); }); }
             var pwd=document.getElementById('auth-password');
-            if(pwd){ pwd.addEventListener('keypress', function(e){ if(e.key==='Enter'){e.preventDefault(); try{login_real();}catch(err){alert('Erreur: '+err.message);}} }); }
+            if(pwd){ pwd.addEventListener('keypress', function(e){ if(e.key==='Enter'){e.preventDefault(); login_real().catch(function(){alert('Connexion impossible.');});} }); }
             var usr=document.getElementById('auth-username');
             if(usr){ usr.addEventListener('keypress', function(e){ if(e.key==='Enter'){e.preventDefault(); var p=document.getElementById('auth-password'); if(p)p.focus();} }); }
         })();
@@ -1481,7 +1510,7 @@
             try{renderDashboard();}catch(e){} try{renderTransactions();}catch(e){} try{renderProfile();}catch(e){} try{renderAnnuaire();}catch(e){} try{renderBureau();}catch(e){} try{renderMyManagedMembers();}catch(e){} try{loadSettings();}catch(e){} try{renderAuditLog();}catch(e){} try{renderOpportunities();}catch(e){} try{renderOppStats();}catch(e){} try{renderMessages();}catch(e){} try{renderMsgStats();}catch(e){} try{renderGlobalStats();}catch(e){} try{renderGroupMemberList();}catch(e){}
         }
         try{window.showApp=showApp;}catch(e){}
-        function showSection(id){ document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');}); document.querySelectorAll('nav a').forEach(function(a){a.classList.remove('active');}); var el=document.getElementById(id);if(el)el.classList.add('active'); var nl=document.getElementById('nav-'+id);if(nl)nl.classList.add('active'); var lm=document.getElementById('logo-menu');if(lm)lm.classList.remove('active'); var nv=document.querySelector('nav');if(nv)nv.classList.remove('nav-open');var hb=document.getElementById('nav-hamburger');if(hb)hb.textContent='☰'; if(id==='bureau')try{renderBureau();}catch(e){} if(id==='profil')try{renderProfile();renderAnnuaire();}catch(e){} }
+        function showSection(id){ if(!requireAuth())return;if(id==='parametres'&&!isAdmin(currentUser))return alert('Accès administrateur requis.');document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');}); document.querySelectorAll('nav a').forEach(function(a){a.classList.remove('active');}); var el=document.getElementById(id);if(el)el.classList.add('active'); var nl=document.getElementById('nav-'+id);if(nl)nl.classList.add('active'); var lm=document.getElementById('logo-menu');if(lm)lm.classList.remove('active'); var nv=document.querySelector('nav');if(nv)nv.classList.remove('nav-open');var hb=document.getElementById('nav-hamburger');if(hb)hb.textContent='☰'; if(id==='bureau')try{renderBureau();}catch(e){} if(id==='profil')try{renderProfile();renderAnnuaire();}catch(e){} }
         (function(){var btn=document.getElementById('logo-btn'),menu=document.getElementById('logo-menu');if(btn&&menu){btn.addEventListener('click',function(e){e.stopPropagation();menu.classList.toggle('active');});document.addEventListener('click',function(){menu.classList.remove('active');});}})();
         function showRegStep(step){
             for(var i=1;i<=3;i++){
@@ -1489,15 +1518,19 @@
                 var s=document.getElementById('reg-step-btn-'+i);if(s)s.classList.toggle('active',i<=step);
             }
         }
-        function registerUser(){
+        async function registerUser(){
             var u=document.getElementById('reg-username').value.trim(),e=document.getElementById('reg-email').value.trim(),p=document.getElementById('reg-password').value,pc=document.getElementById('reg-password-confirm').value;
             var errEl=document.getElementById('auth-error-register'),sucEl=document.getElementById('auth-success-register');errEl.style.display='none';sucEl.style.display='none';
             var fullname=document.getElementById('reg-fullname').value.trim(),phone=document.getElementById('reg-phone').value.trim();
             if(!u||!fullname||!phone||!p){errEl.innerText='Veuillez remplir tous les champs obligatoires (*).';errEl.style.display='block';return;}
-            if(p.length<6){errEl.innerText='Mot de passe min 6 caractères.';errEl.style.display='block';return;}
+            if(!/^[A-Za-z0-9._-]{3,40}$/.test(u)){errEl.innerText='Utilisateur invalide (3 à 40 lettres, chiffres, point, tiret ou underscore).';errEl.style.display='block';return;}
+            if(fullname.length>120||!/^[+()0-9 .-]{6,30}$/.test(phone)||e&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){errEl.innerText='Nom, téléphone ou email invalide.';errEl.style.display='block';return;}
+            if(p.length<10||p.length>128){errEl.innerText='Mot de passe entre 10 et 128 caractères.';errEl.style.display='block';return;}
             if(p!==pc){errEl.innerText='Mots de passe différents.';errEl.style.display='block';return;}
             if(users.find(function(x){return x.username===u;})){errEl.innerText='Ce nom d\'utilisateur existe déjà.';errEl.style.display='block';return;}
-            var newUser={id:Date.now(),username:u,password:p,name:fullname,role:'membre',email:e,phone:phone,address:'',birth:'',gender:'',city:'',proStatus:'',job:'',company:'',sector:'',level:'',experience:'',skills:'',promo:'',bio:'',joinDate:new Date().toLocaleDateString('fr-FR')};
+            var firstUser=!users.some(function(existing){return existing.role==='superadmin';});
+            var newUser={id:Date.now(),username:u,name:fullname,role:firstUser?'superadmin':'membre',email:e,phone:phone,address:'',birth:'',gender:'',city:'',proStatus:'',job:'',company:'',sector:'',level:'',experience:'',skills:'',promo:'',bio:'',bureauRole:firstUser?'fondateur':'',joinDate:new Date().toLocaleDateString('fr-FR')};
+            try{await setUserPassword(newUser,p);}catch(err){errEl.innerText=err.message;errEl.style.display='block';return;}
             users.push(newUser);saveData();
             sucEl.innerText='✅ Compte créé avec succès ! Vous pouvez maintenant vous connecter.';sucEl.style.display='block';
             setTimeout(function(){showAuthTab('login');},2500);
@@ -1514,11 +1547,11 @@
             var u=users.find(function(x){return x.id===currentUser.id;});if(!u)return;
             var statusLabels={'emploi':'💼 En poste','recherche':'🔍 En recherche','stage':'🎓 En stage','etudiant':'📚 Étudiant','independant':'🧑‍💻 Indépendant','entrepreneur':'🏢 Entrepreneur','retraite':'👴 Retraité'};
             var hero=document.getElementById('profile-hero-section');
-            if(hero)hero.innerHTML='<div class="profile-hero-avatar">'+(u.name||'?').charAt(0).toUpperCase()+'</div><div class="profile-hero-info"><h3>'+escapeHtml(u.name||u.username)+'</h3><p>'+(statusLabels[u.proStatus]||'👤 Membre')+(u.job?' — '+escapeHtml(u.job):'')+'</p><p>'+(u.city?escapeHtml(u.city)+' • ':'')+(u.sector?escapeHtml(u.sector)+' • ':'')+escapeHtml(u.role||'membre')+'</p>'+(u.bio?'<p style="opacity:0.8;font-style:italic;">"'+escapeHtml(u.bio)+'"</p>':'')+'</div>';
+            if(hero)hero.innerHTML='<div class="profile-hero-avatar">'+escapeHtml((u.name||'?').charAt(0).toUpperCase())+'</div><div class="profile-hero-info"><h3>'+escapeHtml(u.name||u.username)+'</h3><p>'+escapeHtml(statusLabels[u.proStatus]||'👤 Membre')+(u.job?' — '+escapeHtml(u.job):'')+'</p><p>'+(u.city?escapeHtml(u.city)+' • ':'')+(u.sector?escapeHtml(u.sector)+' • ':'')+escapeHtml(u.role||'membre')+'</p>'+(u.bio?'<p style="opacity:0.8;font-style:italic;">"'+escapeHtml(u.bio)+'"</p>':'')+'</div>';
             var msgCount=messages.filter(function(m){return m.senderId===currentUser.id||m.receiverId===currentUser.id;}).length;
             var txCount=transactions.filter(function(t){return(t.desc||'').toLowerCase().indexOf((u.name||'').toLowerCase())!==-1;}).length;
             var stats=document.getElementById('profile-stats-row');
-            if(stats)stats.innerHTML='<div class="profile-stat-box"><div class="num">'+(u.joinDate||'-')+'</div><div class="label">📅 Membre depuis</div></div><div class="profile-stat-box"><div class="num">'+msgCount+'</div><div class="label">💬 Messages</div></div><div class="profile-stat-box"><div class="num">'+txCount+'</div><div class="label">💰 Transactions</div></div><div class="profile-stat-box"><div class="num">'+(u.skills?u.skills.split(',').length:0)+'</div><div class="label">🛠️ Compétences</div></div>';
+            if(stats)stats.innerHTML='<div class="profile-stat-box"><div class="num">'+escapeHtml(u.joinDate||'-')+'</div><div class="label">📅 Membre depuis</div></div><div class="profile-stat-box"><div class="num">'+msgCount+'</div><div class="label">💬 Messages</div></div><div class="profile-stat-box"><div class="num">'+txCount+'</div><div class="label">💰 Transactions</div></div><div class="profile-stat-box"><div class="num">'+(u.skills?u.skills.split(',').length:0)+'</div><div class="label">🛠️ Compétences</div></div>';
             var info=document.getElementById('profile-info');
             if(info)info.innerHTML='<div style="display:grid;gap:8px;font-size:0.9rem;">'+
             '<div><strong>👤 Nom:</strong> '+escapeHtml(u.name||'N/A')+'</div>'+
@@ -1529,11 +1562,11 @@
             '<div><strong>🎂 Naissance:</strong> '+(u.birth?new Date(u.birth).toLocaleDateString('fr-FR'):'N/A')+'</div>'+
             '<div><strong>🚬 Sexe:</strong> '+(u.gender==='M'?'Masculin':u.gender==='F'?'Féminin':'N/A')+'</div>'+
             '<div><strong>🎓 Promotion:</strong> '+escapeHtml(u.promo||'N/A')+'</div>'+
-            '<div><strong>📅 Inscrit le:</strong> '+(u.joinDate||'N/A')+'</div></div>';
+            '<div><strong>📅 Inscrit le:</strong> '+escapeHtml(u.joinDate||'N/A')+'</div></div>';
             var pro=document.getElementById('profile-pro-info');
             if(pro){var skHtml='';if(u.skills){var sk=u.skills.split(',');for(var i=0;i<sk.length;i++)skHtml+='<span class="skill-tag">'+escapeHtml(sk[i].trim())+'</span>';}}
             pro.innerHTML='<div style="display:grid;gap:8px;font-size:0.9rem;">'+
-            '<div><strong>📊 Statut:</strong> '+(statusLabels[u.proStatus]||'N/A')+'</div>'+
+            '<div><strong>📊 Statut:</strong> '+escapeHtml(statusLabels[u.proStatus]||'N/A')+'</div>'+
             '<div><strong>💼 Poste:</strong> '+escapeHtml(u.job||'N/A')+'</div>'+
             '<div><strong>🏭 Entreprise:</strong> '+escapeHtml(u.company||'N/A')+'</div>'+
             '<div><strong>🏢 Secteur:</strong> '+escapeHtml(u.sector||'N/A')+'</div>'+
@@ -1564,9 +1597,9 @@
                 var skHtml='';if(u.skills){var sk=u.skills.split(',');for(var j=0;j<Math.min(sk.length,5);j++)skHtml+='<span class="skill-tag">'+escapeHtml(sk[j].trim())+'</span>';if(sk.length>5)skHtml+='<span class="skill-tag">+'+( sk.length-5)+'</span>';}
                 html+='<div class="member-card">'+
                     '<div class="member-card-header">'+
-                        '<div class="member-card-avatar">'+(u.name||'?').charAt(0).toUpperCase()+'</div>'+
+                        '<div class="member-card-avatar">'+escapeHtml((u.name||'?').charAt(0).toUpperCase())+'</div>'+
                         '<div><h4 class="member-card-name">'+escapeHtml(u.name||u.username)+'</h4>'+
-                        '<span class="member-card-role '+roleClass+'">'+(statusLabels[u.proStatus]||'👤 Membre')+'</span>'+
+                        '<span class="member-card-role '+roleClass+'">'+escapeHtml(statusLabels[u.proStatus]||'👤 Membre')+'</span>'+
                         ' <span style="font-size:0.7rem;color:#999;background:#f5f5f5;padding:2px 6px;border-radius:8px;">'+escapeHtml(u.role||'membre')+'</span></div>'+
                     '</div>'+
                     (u.job?'<div class="member-card-info"><strong>💼</strong>'+escapeHtml(u.job)+(u.company?' @ '+escapeHtml(u.company):'')+'</div>':'')+
@@ -1580,10 +1613,10 @@
                     (u.bio?'<div style="margin-top:8px;font-size:0.8rem;color:#666;font-style:italic;">"'+escapeHtml(u.bio.length>100?u.bio.substring(0,100)+'...':u.bio)+'"</div>':'')+
                     '<div class="member-card-actions">'+
                         '<button class="sm secondary" onclick="viewMember('+u.id+')">👁️ Profil complet</button>'+
-                        (u.email?'<button class="sm ghost" onclick="window.location.href=\'mailto:'+escapeHtml(u.email)+'\'">📧 Email</button>':'')+
-                        (u.phone?'<button class="sm ghost" onclick="window.open(\'tel:'+escapeHtml(u.phone)+'\')">📞 Appeler</button>':'')+
+                        (safeMailto(u.email)?'<a class="sm ghost" href="'+escapeAttribute(safeMailto(u.email))+'" style="text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px;">📧 Email</a>':'')+
+                        (safeTel(u.phone)?'<a class="sm ghost" href="'+escapeAttribute(safeTel(u.phone))+'" style="text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px;">📞 Appeler</a>':'')+
                     '</div>'+
-                    '<div style="margin-top:6px;font-size:0.7rem;color:#aaa;">Membre depuis '+(u.joinDate||'N/A')+'</div>'+
+                    '<div style="margin-top:6px;font-size:0.7rem;color:#aaa;">Membre depuis '+escapeHtml(u.joinDate||'N/A')+'</div>'+
                 '</div>';
             }
             list.innerHTML=html;
@@ -1607,29 +1640,31 @@
             document.getElementById('edit-my-bio').value=u.bio||'';
         }
         function saveMyProfile(){
-            if(!currentUser)return;var u=users.find(function(x){return x.id===currentUser.id;});if(!u)return;
-            u.name=document.getElementById('edit-my-name').value.trim()||u.name;
-            u.phone=document.getElementById('edit-my-phone').value.trim();
-            u.email=document.getElementById('edit-my-email').value.trim()||u.email;
-            u.address=document.getElementById('edit-my-address').value.trim();
-            u.city=document.getElementById('edit-my-city').value.trim();
-            u.birth=document.getElementById('edit-my-birth').value;
-            u.proStatus=document.getElementById('edit-my-status').value;
-            u.job=document.getElementById('edit-my-job').value.trim();
-            u.company=document.getElementById('edit-my-company').value.trim();
-            u.sector=document.getElementById('edit-my-sector').value.trim();
+            if(!requireAuth())return;var u=users.find(function(x){return x.id===currentUser.id;});if(!u)return;
+            var name=document.getElementById('edit-my-name').value.trim().slice(0,120),phone=document.getElementById('edit-my-phone').value.trim(),email=document.getElementById('edit-my-email').value.trim(),birth=document.getElementById('edit-my-birth').value,proStatus=document.getElementById('edit-my-status').value;
+            if(!name||phone&&!/^[+()0-9 .-]{6,30}$/.test(phone)||email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||birth&&!/^\d{4}-\d{2}-\d{2}$/.test(birth)||!['','emploi','recherche','stage','etudiant','independant','entrepreneur','retraite'].includes(proStatus))return alert('Profil invalide.');
+            u.name=name;
+            u.phone=phone;
+            u.email=email;
+            u.address=document.getElementById('edit-my-address').value.trim().slice(0,300);
+            u.city=document.getElementById('edit-my-city').value.trim().slice(0,120);
+            u.birth=birth;
+            u.proStatus=proStatus;
+            u.job=document.getElementById('edit-my-job').value.trim().slice(0,160);
+            u.company=document.getElementById('edit-my-company').value.trim().slice(0,160);
+            u.sector=document.getElementById('edit-my-sector').value.trim().slice(0,160);
             u.level=document.getElementById('edit-my-level').value;
-            u.promo=document.getElementById('edit-my-promo').value.trim();
-            u.experience=document.getElementById('edit-my-experience').value.trim();
-            u.skills=document.getElementById('edit-my-skills').value.trim();
-            u.bio=document.getElementById('edit-my-bio').value.trim();
+            u.promo=document.getElementById('edit-my-promo').value.trim().slice(0,120);
+            u.experience=document.getElementById('edit-my-experience').value.trim().slice(0,5000);
+            u.skills=document.getElementById('edit-my-skills').value.trim().slice(0,1000);
+            u.bio=document.getElementById('edit-my-bio').value.trim().slice(0,2000);
             saveData();logAudit('Profil mis à jour: '+u.username);
             alert('✅ Profil mis à jour avec succès!');showProfileTab('my');
         }
-        function forgotPassword(){ var e=document.getElementById('forgot-email').value.trim(),sucEl=document.getElementById('auth-success-forgot'); sucEl.style.display='none'; if(!e){document.getElementById('auth-error-forgot').innerText='Email requis.';document.getElementById('auth-error-forgot').style.display='block';return;} sucEl.innerText='Lien envoye (sim).';sucEl.style.display='block'; }
+        function forgotPassword(){ var e=document.getElementById('forgot-email').value.trim(),sucEl=document.getElementById('auth-success-forgot'),errEl=document.getElementById('auth-error-forgot');sucEl.style.display='none';errEl.style.display='none';if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){errEl.innerText='Email invalide.';errEl.style.display='block';return;}sucEl.innerText='Contactez un administrateur pour réinitialiser votre mot de passe.';sucEl.style.display='block';}
         function logout(){ if(currentUser)logAudit('Deconnexion'); currentUser=null; try{sessionStorage.removeItem('asso_currentUser');}catch(e){} document.getElementById('login-screen').style.display='flex'; document.getElementById('app-container').style.display='none'; }
-        function renderDashboard(){ document.getElementById('dash-members').innerText=users.filter(function(u){return u.role!=='superadmin';}).length; var r=0,d=0; for(var i=0;i<transactions.length;i++){if(transactions[i].status==='validated'){if(transactions[i].type==='recette')r+=transactions[i].amount;else d+=transactions[i].amount;}} document.getElementById('dash-balance').innerText=(r-d).toLocaleString()+' FCFA'; var tb=document.getElementById('dash-recent-tx'); if(tb){tb.innerHTML='';var s=transactions.slice().sort(function(a,b){return b.id-a.id;}).slice(0,5);for(var j=0;j<s.length;j++){var t=s[j];tb.innerHTML+='<tr><td>'+t.date+'</td><td>'+escapeHtml(t.desc)+'</td><td>'+t.amount.toLocaleString()+'</td><td>'+(t.status==='validated'?'Valide':'Attente')+'</td></tr>';}} }
-        function renderTransactions(){ var tb=document.getElementById('tx-list');if(!tb)return; var f=document.getElementById('tx-filter')?document.getElementById('tx-filter').value:'all'; tb.innerHTML='';var r=0,d=0; var fl=transactions.filter(function(t){if(f==='all')return true;if(f==='pending')return t.status==='pending';if(f==='rejected')return t.status==='rejected';return t.type===f;}); fl.sort(function(a,b){return b.id-a.id;}); var isAdmin=currentUser&&(currentUser.role==='admin'||currentUser.role==='superadmin'); for(var i=0;i<fl.length;i++){var t=fl[i];if(t.status==='validated'){if(t.type==='recette')r+=t.amount;else d+=t.amount;}var ac='<button class="sm secondary" onclick="viewReceipt('+t.id+')">🧾 Reçu</button>';if(t.status==='pending'&&canManageCash(currentUser))ac+=' <button class="sm primary" onclick="validateTx('+t.id+')">✅</button>';if(isAdmin){ac+=' <button class="sm ghost" onclick="quickEditTx('+t.id+')" title="Modifier">✏️</button>';ac+=' <button class="sm ghost" onclick="quickDeleteTx('+t.id+')" title="Supprimer">🗑️</button>';}var statusBadge=t.status==='validated'?'<span style="color:#2e7d32;">✅ Valide</span>':t.status==='rejected'?'<span style="color:#c62828;">❌ Rejeté</span>':'<span style="color:#f57f17;">⏳ Attente</span>';var modifiedMark=t.modifiedBy?'<br><span style="font-size:0.7rem;color:#999;">modifié par '+escapeHtml(t.modifiedBy)+'</span>':'';tb.innerHTML+='<tr><td>'+t.date+'</td><td>'+(t.type==='recette'?'💰':'💸')+' '+t.type+'</td><td>'+t.cat+'</td><td>'+escapeHtml(t.desc)+modifiedMark+'</td><td style="font-weight:600;">'+t.amount.toLocaleString()+'</td><td>'+statusBadge+'</td><td>'+ac+'</td></tr>';} var re=document.getElementById('caisse-recettes'),de=document.getElementById('caisse-depenses'),so=document.getElementById('caisse-solde');if(re)re.innerText=r.toLocaleString()+' FCFA';if(de)de.innerText=d.toLocaleString()+' FCFA';if(so)so.innerText=(r-d).toLocaleString()+' FCFA'; }
+        function renderDashboard(){ document.getElementById('dash-members').innerText=users.filter(function(u){return u.role!=='superadmin';}).length; var r=0,d=0; for(var i=0;i<transactions.length;i++){if(transactions[i].status==='validated'){if(transactions[i].type==='recette')r+=Number(transactions[i].amount)||0;else d+=Number(transactions[i].amount)||0;}} document.getElementById('dash-balance').innerText=(r-d).toLocaleString()+' FCFA'; var tb=document.getElementById('dash-recent-tx'); if(tb){tb.innerHTML='';var s=transactions.slice().sort(function(a,b){return b.id-a.id;}).slice(0,5);for(var j=0;j<s.length;j++){var t=s[j],amount=Number(t.amount)||0;tb.innerHTML+='<tr><td>'+escapeHtml(t.date)+'</td><td>'+escapeHtml(t.desc)+'</td><td>'+amount.toLocaleString()+'</td><td>'+(t.status==='validated'?'Valide':'Attente')+'</td></tr>';}} }
+        function renderTransactions(){ var tb=document.getElementById('tx-list');if(!tb)return; var f=document.getElementById('tx-filter')?document.getElementById('tx-filter').value:'all'; tb.innerHTML='';var r=0,d=0; var fl=transactions.filter(function(t){if(f==='all')return true;if(f==='pending')return t.status==='pending';if(f==='rejected')return t.status==='rejected';return t.type===f;}); fl.sort(function(a,b){return b.id-a.id;}); var adminUser=isAdmin(currentUser); for(var i=0;i<fl.length;i++){var t=fl[i],amount=Number(t.amount)||0;if(t.status==='validated'){if(t.type==='recette')r+=amount;else d+=amount;}var ac='<button class="sm secondary" onclick="viewReceipt('+t.id+')">🧾 Reçu</button>';if(t.status==='pending'&&canManageCash(currentUser))ac+=' <button class="sm primary" onclick="validateTx('+t.id+')">✅</button>';if(adminUser){ac+=' <button class="sm ghost" onclick="quickEditTx('+t.id+')" title="Modifier">✏️</button>';ac+=' <button class="sm ghost" onclick="quickDeleteTx('+t.id+')" title="Supprimer">🗑️</button>';}var statusBadge=t.status==='validated'?'<span style="color:#2e7d32;">✅ Valide</span>':t.status==='rejected'?'<span style="color:#c62828;">❌ Rejeté</span>':'<span style="color:#f57f17;">⏳ Attente</span>';var modifiedMark=t.modifiedBy?'<br><span style="font-size:0.7rem;color:#999;">modifié par '+escapeHtml(t.modifiedBy)+'</span>':'';tb.innerHTML+='<tr><td>'+escapeHtml(t.date)+'</td><td>'+(t.type==='recette'?'💰':'💸')+' '+escapeHtml(t.type)+'</td><td>'+escapeHtml(t.cat)+'</td><td>'+escapeHtml(t.desc)+modifiedMark+'</td><td style="font-weight:600;">'+amount.toLocaleString()+'</td><td>'+statusBadge+'</td><td>'+ac+'</td></tr>';} var re=document.getElementById('caisse-recettes'),de=document.getElementById('caisse-depenses'),so=document.getElementById('caisse-solde');if(re)re.innerText=r.toLocaleString()+' FCFA';if(de)de.innerText=d.toLocaleString()+' FCFA';if(so)so.innerText=(r-d).toLocaleString()+' FCFA'; }
         function quickEditTx(id){
             if(!(currentUser&&(currentUser.role==='admin'||currentUser.role==='superadmin')))return alert('Accès refusé.');
             var t=transactions.find(function(x){return x.id===id;});if(!t)return;
@@ -1647,15 +1682,16 @@
         function quickDeleteTx(id){
             if(!(currentUser&&(currentUser.role==='admin'||currentUser.role==='superadmin')))return alert('Accès refusé.');
             var t=transactions.find(function(x){return x.id===id;});if(!t)return;
-            if(!confirm('Supprimer le reçu REC-'+String(id).slice(-6)+' ('+t.amount.toLocaleString()+' FCFA) ?\n\nCette action est irréversible!'))return;
+            if(!confirm('Supprimer le reçu REC-'+String(id).slice(-6)+' ('+(Number(t.amount)||0).toLocaleString()+' FCFA) ?\n\nCette action est irréversible!'))return;
             transactions=transactions.filter(function(x){return x.id!==id;});
             saveData();renderTransactions();renderDashboard();
             logAudit('Suppression reçu N°'+String(id).slice(-6)+' ('+t.amount+' FCFA)');
             alert('✅ Reçu supprimé.');
         }
-        function addTransaction(){var ty=document.getElementById('tx-type').value,ca=document.getElementById('tx-cat').value,de=document.getElementById('tx-desc').value.trim(),am=parseInt(document.getElementById('tx-amount').value);if(!de||!am||am<=0)return alert('Champs requis.');transactions.push({id:Date.now(),date:new Date().toISOString().split('T')[0],type:ty,cat:ca,desc:de,amount:am,status:canManageCash(currentUser)?'validated':'pending',createdBy:currentUser?currentUser.username:'anon'});saveData();renderTransactions();renderDashboard();document.getElementById('tx-desc').value='';document.getElementById('tx-amount').value='';alert('OK');}
-        function validateTx(id){for(var i=0;i<transactions.length;i++){if(transactions[i].id===id){transactions[i].status='validated';break;}}saveData();renderTransactions();renderDashboard();}
+        function addTransaction(){if(!requireAuth())return;var ty=document.getElementById('tx-type').value,ca=document.getElementById('tx-cat').value,de=document.getElementById('tx-desc').value.trim().slice(0,500),am=parseInt(document.getElementById('tx-amount').value);if(!['recette','depense'].includes(ty)||!['cotisation','don','evenement','fonctionnement','autre'].includes(ca)||!de||!Number.isSafeInteger(am)||am<=0)return alert('Champs requis.');transactions.push({id:Date.now(),date:new Date().toISOString().split('T')[0],type:ty,cat:ca,desc:de,amount:am,status:canManageCash(currentUser)?'validated':'pending',createdBy:currentUser.username});saveData();renderTransactions();renderDashboard();document.getElementById('tx-desc').value='';document.getElementById('tx-amount').value='';alert('OK');}
+        function validateTx(id){if(!canManageCash(currentUser))return alert('Accès caisse requis.');for(var i=0;i<transactions.length;i++){if(transactions[i].id===id){transactions[i].status='validated';break;}}saveData();renderTransactions();renderDashboard();}
         function viewReceipt(id){
+    if(!requireAuth())return;
     var t=transactions.find(function(x){return x.id===id;});if(!t)return;
     window._currentReceiptId=id;
     var an=document.getElementById('receipt-asso-name');if(an&&settings&&settings.name)an.innerText=settings.name;
@@ -1664,7 +1700,7 @@
     document.getElementById('receipt-type').innerHTML=t.type==='recette'?'<span style="color:#2e7d32;font-weight:600;">💰 Recette</span>':'<span style="color:#c62828;font-weight:600;">💸 Dépense</span>';
     var catLabels={'cotisation':'Cotisation','don':'Don','evenement':'Événement','fonctionnement':'Fonctionnement','salaire':'Salaire','fourniture':'Fourniture','autre':'Autre'};
     document.getElementById('receipt-cat').innerText=catLabels[t.cat]||t.cat;
-    document.getElementById('receipt-amount').innerText=t.amount.toLocaleString()+' FCFA';
+    document.getElementById('receipt-amount').innerText=(Number(t.amount)||0).toLocaleString()+' FCFA';
     var statusHtml=t.status==='validated'?'<span style="color:#2e7d32;font-weight:600;">✅ Validée</span>':t.status==='rejected'?'<span style="color:#c62828;font-weight:600;">❌ Rejetée</span>':'<span style="color:#f57f17;font-weight:600;">⏳ En attente</span>';
     document.getElementById('receipt-status').innerHTML=statusHtml;
     document.getElementById('receipt-desc').innerText=t.desc||'Aucune description';
@@ -1678,8 +1714,8 @@
 function closeReceiptModal(){document.getElementById('receipt-modal').classList.remove('active');window._currentReceiptId=null;}
 function closeEditTxModal(){document.getElementById('edit-tx-modal').classList.remove('active');}
 function editTxFromReceipt(){
-    closeReceiptModal();
-    var id=window._currentReceiptId;var t=transactions.find(function(x){return x.id===id;});if(!t)return;
+    var id=window._currentReceiptId;closeReceiptModal();
+    var t=transactions.find(function(x){return x.id===id;});if(!t)return;
     if(!(currentUser&&(currentUser.role==='admin'||currentUser.role==='superadmin')))return alert('Accès refusé.');
     document.getElementById('edit-tx-id').value=t.id;
     document.getElementById('edit-tx-title').innerText='✏️ Modifier le reçu REC-'+String(t.id).slice(-6);
@@ -1695,26 +1731,28 @@ function editTxFromReceipt(){
 function saveTxEdit(){
     if(!(currentUser&&(currentUser.role==='admin'||currentUser.role==='superadmin')))return alert('Accès refusé.');
     var id=parseInt(document.getElementById('edit-tx-id').value);
+    var type=document.getElementById('edit-tx-type').value,cat=document.getElementById('edit-tx-cat').value,date=document.getElementById('edit-tx-date').value,amount=parseInt(document.getElementById('edit-tx-amount').value),desc=document.getElementById('edit-tx-desc').value.trim().slice(0,500),status=document.getElementById('edit-tx-status').value,notes=document.getElementById('edit-tx-notes').value.trim().slice(0,1000);
+    if(!['recette','depense'].includes(type)||!['cotisation','don','evenement','fonctionnement','salaire','fourniture','autre'].includes(cat)||!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isSafeInteger(amount)||amount<=0||!desc||!['validated','pending','rejected'].includes(status))return alert('Données de transaction invalides.');
+    if(!transactions.some(function(transaction){return transaction.id===id;}))return alert('Transaction introuvable.');
     for(var i=0;i<transactions.length;i++){if(transactions[i].id===id){
-        var old=JSON.parse(JSON.stringify(transactions[i]));
-        transactions[i].type=document.getElementById('edit-tx-type').value;
-        transactions[i].cat=document.getElementById('edit-tx-cat').value;
-        transactions[i].date=document.getElementById('edit-tx-date').value;
-        transactions[i].amount=parseInt(document.getElementById('edit-tx-amount').value)||0;
-        transactions[i].desc=document.getElementById('edit-tx-desc').value.trim();
-        transactions[i].status=document.getElementById('edit-tx-status').value;
-        transactions[i].notes=document.getElementById('edit-tx-notes').value.trim();
+        transactions[i].type=type;
+        transactions[i].cat=cat;
+        transactions[i].date=date;
+        transactions[i].amount=amount;
+        transactions[i].desc=desc;
+        transactions[i].status=status;
+        transactions[i].notes=notes;
         transactions[i].modifiedBy=currentUser.username;
         transactions[i].modifiedAt=new Date().toISOString();
         break;}}
     saveData();renderTransactions();renderDashboard();closeEditTxModal();
-    logAudit('Modification reçu N°'+String(id).slice(-6)+' ('+transactions.find(function(x){return x.id===id;}).amount+' FCFA)');
+    logAudit('Modification reçu N°'+String(id).slice(-6)+' ('+amount+' FCFA)');
     alert('✅ Transaction modifiée avec succès!');
 }
 function deleteTxFromReceipt(){
     if(!(currentUser&&(currentUser.role==='admin'||currentUser.role==='superadmin')))return alert('Accès refusé.');
     var id=window._currentReceiptId;var t=transactions.find(function(x){return x.id===id;});if(!t)return;
-    if(!confirm('⚠️ Supprimer définitivement le reçu REC-'+String(id).slice(-6)+' ?\n\nMontant: '+t.amount.toLocaleString()+' FCFA\nDescription: '+t.desc+'\n\nCette action est irréversible!'))return;
+    if(!confirm('⚠️ Supprimer définitivement le reçu REC-'+String(id).slice(-6)+' ?\n\nMontant: '+(Number(t.amount)||0).toLocaleString()+' FCFA\nDescription: '+t.desc+'\n\nCette action est irréversible!'))return;
     transactions=transactions.filter(function(x){return x.id!==id;});
     saveData();renderTransactions();renderDashboard();closeReceiptModal();
     logAudit('Suppression reçu N°'+String(id).slice(-6)+' ('+t.amount+' FCFA - '+t.desc+')');
@@ -1737,24 +1775,27 @@ function toggleTxStatusFromReceipt(){
 function duplicateTx(){
     if(!(currentUser&&(currentUser.role==='admin'||currentUser.role==='superadmin')))return alert('Accès refusé.');
     var id=window._currentReceiptId;var t=transactions.find(function(x){return x.id===id;});if(!t)return;
-    var dup={id:Date.now(),date:new Date().toISOString().split('T')[0],type:t.type,cat:t.cat,desc:t.desc+' (copie)',amount:t.amount,status:'pending',createdBy:currentUser.username,notes:'Dupliqué du reçu REC-'+String(id).slice(-6)};
+    if(!Number.isFinite(Number(t.amount))||Number(t.amount)<=0)return alert('Montant invalide.');
+    var dup={id:Date.now(),date:new Date().toISOString().split('T')[0],type:t.type==='depense'?'depense':'recette',cat:['cotisation','don','evenement','fonctionnement','salaire','fourniture','autre'].includes(t.cat)?t.cat:'autre',desc:(String(t.desc||'')+' (copie)').slice(0,500),amount:Number(t.amount)||0,status:'pending',createdBy:currentUser.username,notes:'Dupliqué du reçu REC-'+String(id).slice(-6)};
     transactions.push(dup);saveData();renderTransactions();renderDashboard();closeReceiptModal();
     logAudit('Duplication reçu N°'+String(id).slice(-6));
     alert('✅ Transaction dupliquée! Nouveau reçu: REC-'+String(dup.id).slice(-6));
 }
 function printReceipt(){
+    if(!requireAuth())return;
     var t=transactions.find(function(x){return x.id===window._currentReceiptId;});if(!t)return;
     var w=window.open('','_blank','width=400,height=500');
+    if(!w)return alert('Autorisez les fenêtres contextuelles pour imprimer.');w.opener=null;
     w.document.write('<html><head><title>Reçu REC-'+String(t.id).slice(-6)+'</title><style>body{font-family:Arial;padding:20px;font-size:14px;}h2{text-align:center;color:#1a237e;border-bottom:2px dashed #ccc;padding-bottom:10px;}.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dotted #eee;}.amount{font-size:1.5rem;font-weight:bold;color:#2e7d32;text-align:center;margin:20px 0;}.footer{text-align:center;color:#999;font-size:0.8rem;margin-top:30px;border-top:2px dashed #ccc;padding-top:10px;}</style></head><body>');
     w.document.write('<h2>🧾 REÇU DE TRANSACTION</h2>');
-    if(settings&&settings.name)w.document.write('<p style="text-align:center;color:#666;">'+(settings.name||'Association')+'</p>');
+    if(settings&&settings.name)w.document.write('<p style="text-align:center;color:#666;">'+escapeHtml(settings.name||'Association')+'</p>');
     w.document.write('<div class="row"><strong>N° Reçu:</strong><span>REC-'+String(t.id).slice(-6)+'</span></div>');
     w.document.write('<div class="row"><strong>Date:</strong><span>'+new Date(t.date).toLocaleDateString('fr-FR')+'</span></div>');
     w.document.write('<div class="row"><strong>Type:</strong><span>'+(t.type==='recette'?'Recette':'Dépense')+'</span></div>');
-    w.document.write('<div class="row"><strong>Catégorie:</strong><span>'+(t.cat||'')+'</span></div>');
-    w.document.write('<div class="row"><strong>Description:</strong><span>'+(t.desc||'')+'</span></div>');
+    w.document.write('<div class="row"><strong>Catégorie:</strong><span>'+escapeHtml(t.cat||'')+'</span></div>');
+    w.document.write('<div class="row"><strong>Description:</strong><span>'+escapeHtml(t.desc||'')+'</span></div>');
     w.document.write('<div class="row"><strong>Statut:</strong><span>'+(t.status==='validated'?'Validée':'En attente')+'</span></div>');
-    w.document.write('<div class="amount">'+t.amount.toLocaleString()+' FCFA</div>');
+    w.document.write('<div class="amount">'+(Number(t.amount)||0).toLocaleString()+' FCFA</div>');
     w.document.write('<div class="footer">Imprimé le '+new Date().toLocaleDateString('fr-FR')+' à '+new Date().toLocaleTimeString('fr-FR')+'</div>');
     w.document.write('</body></html>');w.document.close();setTimeout(function(){w.print();},300);
 }
@@ -1822,7 +1863,7 @@ function printReceipt(){
                 if(o.skills){var sk=o.skills.split(',');for(var j=0;j<Math.min(sk.length,4);j++){skillsHtml+='<span style="background:#e3f2fd;color:#1565c0;padding:2px 8px;border-radius:10px;font-size:0.75rem;margin:2px;">'+escapeHtml(sk[j].trim())+'</span>';}}
                 html+='<div class="opp-card">'+
                     '<div class="opp-card-header">'+
-                        '<div><span class="opp-badge '+getTypeBadgeClass(o.type)+'">'+getTypeLabel(o.type)+'</span>'+
+                        '<div><span class="opp-badge '+getTypeBadgeClass(o.type)+'">'+escapeHtml(getTypeLabel(o.type))+'</span>'+
                         (o.contract?' <span style="background:#f5f5f5;padding:2px 8px;border-radius:10px;font-size:0.75rem;">'+escapeHtml(o.contract)+'</span>':'')+
                         (o.fav?' ⭐':'')+'</div>'+
                         '<div style="display:flex;gap:4px;">'+
@@ -1844,7 +1885,7 @@ function printReceipt(){
                     '<div class="opp-card-actions">'+
                         '<button class="sm secondary" onclick="viewOppDetail('+o.id+')">👁️ Détails</button>'+
                         (o.contact?'<button class="sm primary" onclick="contactOpp('+o.id+')">📩 Contacter</button>':'')+
-                        (o.url?'<a href="'+escapeHtml(o.url)+'" target="_blank" class="sm secondary" style="text-decoration:none;padding:4px 12px;border:1px solid #ccc;border-radius:6px;">🔗 Lien web</a>':'')+
+                        (safeExternalUrl(o.url)?'<a href="'+escapeAttribute(safeExternalUrl(o.url))+'" target="_blank" rel="noopener noreferrer" class="sm secondary" style="text-decoration:none;padding:4px 12px;border:1px solid #ccc;border-radius:6px;">🔗 Lien web</a>':'')+
                         '<button class="sm ghost" onclick="shareOpp('+o.id+')">📤 Partager</button>'+
                     '</div></div>';
             }
@@ -1852,6 +1893,7 @@ function printReceipt(){
             renderOppStats();
         }
         function openOppModal(editId){
+            if(!requireAdmin())return;
             var modal=document.getElementById('opp-modal');if(!modal)return;
             document.getElementById('opp-edit-id').value='';
             document.getElementById('opp-modal-title').innerText='➕ Nouvelle opportunité';
@@ -1874,6 +1916,7 @@ function printReceipt(){
         function closeOppModal(){document.getElementById('opp-modal').classList.remove('active');}
         function closeOppDetailModal(){var m=document.getElementById('opp-detail-modal');if(m)m.classList.remove('active');}
         function editOpp(id){
+            if(!requireAdmin())return;
             var o=null;for(var i=0;i<opportunities.length;i++){if(opportunities[i].id===id){o=opportunities[i];break;}}
             if(!o)return;
             document.getElementById('opp-edit-id').value=o.id;
@@ -1895,24 +1938,28 @@ function printReceipt(){
             document.getElementById('opp-modal').classList.add('active');
         }
         function saveOpportunity(){
-            var t=document.getElementById('opp-title').value.trim();if(!t)return alert('Le titre est requis');
+            if(!requireAdmin())return;
+            var t=document.getElementById('opp-title').value.trim().slice(0,200);if(!t)return alert('Le titre est requis');
             var editId=document.getElementById('opp-edit-id').value;
+            var type=document.getElementById('opp-type').value,rawUrl=document.getElementById('opp-url').value.trim(),url=safeExternalUrl(rawUrl);
+            if(!['emploi','stage','concours','experience','actualite','bourse','formation','autre'].includes(type))return alert('Type invalide.');
+            if(rawUrl&&!url)return alert('Utilisez une URL HTTP ou HTTPS valide.');
             var data={
                 id:editId?parseInt(editId):Date.now(),
                 title:t,
-                type:document.getElementById('opp-type').value,
+                type:type,
                 sector:document.getElementById('opp-sector').value,
-                company:document.getElementById('opp-company').value.trim(),
-                location:document.getElementById('opp-location').value.trim(),
-                salary:document.getElementById('opp-salary').value.trim(),
+                company:document.getElementById('opp-company').value.trim().slice(0,200),
+                location:document.getElementById('opp-location').value.trim().slice(0,200),
+                salary:document.getElementById('opp-salary').value.trim().slice(0,120),
                 contract:document.getElementById('opp-contract').value,
                 level:document.getElementById('opp-level').value,
                 experience:document.getElementById('opp-experience').value,
                 deadline:document.getElementById('opp-deadline').value,
-                contact:document.getElementById('opp-contact').value.trim(),
-                desc:document.getElementById('opp-desc').value.trim(),
-                skills:document.getElementById('opp-skills').value.trim(),
-                url:document.getElementById('opp-url').value.trim(),
+                contact:document.getElementById('opp-contact').value.trim().slice(0,254),
+                desc:document.getElementById('opp-desc').value.trim().slice(0,5000),
+                skills:document.getElementById('opp-skills').value.trim().slice(0,1000),
+                url:url,
                 fav:false,
                 createdBy:currentUser?currentUser.username:'anon',
                 createdAt:new Date().toISOString()
@@ -1924,20 +1971,22 @@ function printReceipt(){
             alert(editId?'✅ Opportunité modifiée!':'✅ Opportunité ajoutée!');
         }
         function deleteOpp(id){
+            if(!requireAdmin())return;
             if(!confirm('Supprimer cette opportunité ?'))return;
             var name='';
             opportunities=opportunities.filter(function(o){if(o.id===id){name=o.title;return false;}return true;});
             saveOpps();renderOpportunities();logAudit('Suppression opportunité: '+name);
         }
-        function toggleFavoriteOpp(id){for(var i=0;i<opportunities.length;i++){if(opportunities[i].id===id){opportunities[i].fav=!opportunities[i].fav;saveOpps();renderOpportunities();return;}}}
+        function toggleFavoriteOpp(id){if(!requireAuth())return;for(var i=0;i<opportunities.length;i++){if(opportunities[i].id===id){opportunities[i].fav=!opportunities[i].fav;saveOpps();renderOpportunities();return;}}}
         function viewOppDetail(id){
+            if(!requireAuth())return;
             var o=null;for(var i=0;i<opportunities.length;i++){if(opportunities[i].id===id){o=opportunities[i];break;}}
             if(!o)return;
             var modal=document.getElementById('opp-detail-modal');if(!modal)return;
             var c=document.getElementById('opp-detail-content');if(!c)return;
             var deadlineInfo='';if(o.deadline){var dl=new Date(o.deadline);var now=new Date();var diff=Math.ceil((dl-now)/(1000*60*60*24));deadlineInfo=diff<0?'<span style="color:#d32f2f;">⚠️ Expirée depuis '+Math.abs(diff)+' jours</span>':'<span style="color:#2e7d32;">⏰ '+diff+' jours restants (jusqu\'au '+dl.toLocaleDateString('fr-FR')+')</span>';}
             var skillsHtml='';if(o.skills){var sk=o.skills.split(',');for(var j=0;j<sk.length;j++){skillsHtml+='<span style="background:#e3f2fd;color:#1565c0;padding:3px 10px;border-radius:12px;font-size:0.8rem;margin:3px;display:inline-block;">'+escapeHtml(sk[j].trim())+'</span>';}}
-            c.innerHTML='<div style="text-align:center;margin-bottom:16px;"><span class="opp-badge '+getTypeBadgeClass(o.type)+'" style="font-size:0.9rem;padding:6px 16px;">'+getTypeLabel(o.type)+'</span></div>'+
+            c.innerHTML='<div style="text-align:center;margin-bottom:16px;"><span class="opp-badge '+getTypeBadgeClass(o.type)+'" style="font-size:0.9rem;padding:6px 16px;">'+escapeHtml(getTypeLabel(o.type))+'</span></div>'+
             '<h2 style="text-align:center;color:var(--primary);margin:0 0 8px;">'+escapeHtml(o.title)+'</h2>'+
             (o.company?'<p style="text-align:center;color:var(--secondary);font-weight:600;font-size:1rem;">🏢 '+escapeHtml(o.company)+'</p>':'')+
             '<hr style="margin:16px 0;border:none;border-top:1px solid var(--border);">'+
@@ -1954,32 +2003,37 @@ function printReceipt(){
             (o.desc?'<div style="margin-top:16px;"><strong>📄 Description</strong><p style="line-height:1.6;color:#444;margin-top:6px;">'+escapeHtml(o.desc)+'</p></div>':'')+
             (skillsHtml?'<div style="margin-top:16px;"><strong>🛠️ Compétences requises</strong><div style="margin-top:8px;">'+skillsHtml+'</div></div>':'')+
             (o.contact?'<div style="margin-top:16px;padding:12px;background:#e8f5e9;border-radius:8px;"><strong>📩 Contact</strong><br>'+escapeHtml(o.contact)+'</div>':'')+
-            (o.url?'<div style="margin-top:12px;"><a href="'+escapeHtml(o.url)+'" target="_blank" style="color:var(--secondary);">🔗 Voir l\'annonce en ligne</a></div>':'')+
+            (safeExternalUrl(o.url)?'<div style="margin-top:12px;"><a href="'+escapeAttribute(safeExternalUrl(o.url))+'" target="_blank" rel="noopener noreferrer" style="color:var(--secondary);">🔗 Voir l\'annonce en ligne</a></div>':'')+
             '<div style="margin-top:16px;font-size:0.8rem;color:#999;">Publié par '+escapeHtml(o.createdBy||'anonyme')+(o.createdAt?' le '+new Date(o.createdAt).toLocaleDateString('fr-FR'):'')+'</div>';
             var applyBtn=document.getElementById('opp-detail-apply');
-            if(applyBtn){if(o.contact||o.url){applyBtn.style.display='';applyBtn.onclick=function(){if(o.url)window.open(o.url,'_blank');else if(o.contact)window.location.href='mailto:'+o.contact;};}else{applyBtn.style.display='none';}}
+            if(applyBtn){var externalUrl=safeExternalUrl(o.url),emailUrl=safeMailto(o.contact);if(externalUrl||emailUrl){applyBtn.style.display='';applyBtn.onclick=function(){if(externalUrl)window.open(externalUrl,'_blank','noopener,noreferrer');else window.location.href=emailUrl;};}else{applyBtn.style.display='none';applyBtn.onclick=null;}}
             modal.classList.add('active');
         }
         function contactOpp(id){
+            if(!requireAuth())return;
             var o=null;for(var i=0;i<opportunities.length;i++){if(opportunities[i].id===id){o=opportunities[i];break;}}
             if(!o)return;
-            if(o.url){window.open(o.url,'_blank');}
-            else if(o.contact&&o.contact.indexOf('@')>-1){window.location.href='mailto:'+o.contact+'?subject=Candidature: '+encodeURIComponent(o.title);}
+            var externalUrl=safeExternalUrl(o.url),emailUrl=safeMailto(o.contact);
+            if(externalUrl){window.open(externalUrl,'_blank','noopener,noreferrer');}
+            else if(emailUrl){window.location.href=emailUrl+'?subject='+encodeURIComponent('Candidature: '+o.title);}
             else if(o.contact){alert('📞 Contact: '+o.contact);}
             else alert('Aucun contact disponible pour cette opportunité.');
         }
         function shareOpp(id){
+            if(!requireAuth())return;
             var o=null;for(var i=0;i<opportunities.length;i++){if(opportunities[i].id===id){o=opportunities[i];break;}}
             if(!o)return;
             var text='💼 '+o.title+'\n'+(o.company?'🏢 '+o.company+'\n':'')+(o.location?'📍 '+o.location+'\n':'')+(o.salary?'💰 '+o.salary+'\n':'')+(o.desc?o.desc.substring(0,150)+'...':'');
             if(navigator.clipboard){navigator.clipboard.writeText(text).then(function(){alert('📋 Copié dans le presse-papier!');});}else{prompt('Copier ce texte:',text);}
         }
         function exportOpps(){
+            if(!requireAuth())return;
             var csv='Titre,Type,Entreprise,Localisation,Salaire,Contrat,Secteur,Niveau,Date limite,Contact\n';
-            for(var i=0;i<opportunities.length;i++){var o=opportunities[i];csv+='"'+(o.title||'')+'","'+(o.type||'')+'","'+(o.company||'')+'","'+(o.location||'')+'","'+(o.salary||'')+'","'+(o.contract||'')+'","'+(o.sector||'')+'","'+(o.level||'')+'","'+(o.deadline||'')+'","'+(o.contact||'')+'"\n';}
+            for(var i=0;i<opportunities.length;i++){var o=opportunities[i];csv+=[o.title,o.type,o.company,o.location,o.salary,o.contract,o.sector,o.level,o.deadline,o.contact].map(csvCell).join(',')+'\n';}
             var b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='opportunites_'+new Date().toISOString().split('T')[0]+'.csv';a.click();logAudit('Export opportunités CSV');
         }
         function loadCIDefaultOpps(){
+            if(!requireAdmin())return;
             if(!confirm('Charger les exemples d\'opportunités en Côte d\'Ivoire ?\n(ajoute des exemples sans supprimer vos données actuelles)'))return;
             var ciOpps=[
                 {id:Date.now()+1,title:'Développeur Web Full Stack',type:'emploi',sector:'IT & Numérique',company:'Orange CI',location:'Abidjan, Plateau',salary:'400 000 - 600 000 FCFA',contract:'CDI',level:'BAC+3',experience:'Intermédiaire',deadline:'2026-07-15',contact:'rh@orange.ci',desc:'Développement d\'applications web pour les services numériques d\'Orange Côte d\'Ivoire. Stack: React, Node.js, PostgreSQL.',skills:'JavaScript, React, Node.js, PostgreSQL, Git',url:'',fav:false,createdBy:'système',createdAt:new Date().toISOString()},
@@ -2004,26 +2058,27 @@ function printReceipt(){
         }
         // --- MESSAGES ENRICHIS ---
         function renderMessages(){
+            if(!currentUser)return;
             var sb=document.getElementById('chat-sidebar'),cb=document.getElementById('chat-messages');
             if(!sb||!cb)return;
             var searchVal=(document.getElementById('chat-search')||{}).value||'';
-            sb.innerHTML='<div style="padding:8px;"><input type="text" id="chat-search" placeholder="🔍 Chercher contact..." oninput="renderMessages()" value="'+escapeHtml(searchVal)+'" style="font-size:0.85rem;padding:6px 8px;" /></div>';
+            sb.innerHTML='<div style="padding:8px;"><input type="text" id="chat-search" placeholder="🔍 Chercher contact..." oninput="renderMessages()" value="'+escapeAttribute(searchVal)+'" style="font-size:0.85rem;padding:6px 8px;" /></div>';
             for(var i=0;i<users.length;i++){
                 if(users[i].id===(currentUser?currentUser.id:0))continue;
-                if(searchVal&&users[i].name.toLowerCase().indexOf(searchVal.toLowerCase())===-1)continue;
+                if(searchVal&&String(users[i].name||'').toLowerCase().indexOf(searchVal.toLowerCase())===-1)continue;
                 var lastMsg=messages.filter(function(m){return(m.senderId===currentUser.id&&m.receiverId===users[i].id)||(m.senderId===users[i].id&&m.receiverId===currentUser.id);}).pop();
                 var preview=lastMsg?escapeHtml(lastMsg.content).substring(0,25)+'...':'';
                 var unread=messages.filter(function(m){return m.senderId===users[i].id&&m.receiverId===currentUser.id&&!m.read;}).length;
                 var badge=unread>0?'<span class="badge badge-danger" style="margin-left:auto;">'+unread+'</span>':'';
                 var active=currentChatTarget===users[i].id?' active':'';
-                sb.innerHTML+='<div class="chat-contact'+active+'" onclick="selectChat('+users[i].id+')"><div class="member-avatar">'+users[i].name.charAt(0).toUpperCase()+'</div><div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:0.9rem;">'+escapeHtml(users[i].name)+'</div><div style="font-size:0.75rem;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+preview+'</div></div>'+badge+'</div>';
+                sb.innerHTML+='<div class="chat-contact'+active+'" onclick="selectChat('+users[i].id+')"><div class="member-avatar">'+escapeHtml((users[i].name||'?').charAt(0).toUpperCase())+'</div><div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:0.9rem;">'+escapeHtml(users[i].name)+'</div><div style="font-size:0.75rem;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+preview+'</div></div>'+badge+'</div>';
             }
             cb.innerHTML='';
             if(!currentChatTarget){cb.innerHTML='<p style="color:#999;text-align:center;margin-top:40px;">👈 Sélectionnez un contact pour commencer une discussion.</p>';return;}
             var ms=messages.filter(function(m){return(m.senderId===currentUser.id&&m.receiverId===currentChatTarget)||(m.senderId===currentChatTarget&&m.receiverId===currentUser.id);});
             var filterVal=(document.getElementById('msg-search-inline')||{}).value||'';
             for(var j=0;j<ms.length;j++){
-                if(filterVal&&ms[j].content.toLowerCase().indexOf(filterVal.toLowerCase())===-1)continue;
+                if(filterVal&&String(ms[j].content||'').toLowerCase().indexOf(filterVal.toLowerCase())===-1)continue;
                 var sent=ms[j].senderId===currentUser.id?'sent':'received';
                 var pin=ms[j].pinned?'<span class="msg-pin">📌 Épinglé</span>':'';
                 var readIcon=ms[j].read?'✅':'';
@@ -2035,37 +2090,39 @@ function printReceipt(){
             messages.forEach(function(m){if(m.senderId===currentChatTarget&&m.receiverId===currentUser.id)m.read=true;});
             localStorage.setItem('asso_messages',JSON.stringify(messages));
         }
-        function selectChat(id){currentChatTarget=id;renderMessages();renderMsgStats();}
+        function selectChat(id){if(!requireAuth()||!users.some(function(user){return user.id===id;}))return;currentChatTarget=id;renderMessages();renderMsgStats();}
         function sendMessage(){
+            if(!requireAuth()||!users.some(function(user){return user.id===currentChatTarget;}))return;
             var inp=document.getElementById('msg-input');if(!inp||!inp.value.trim()||!currentChatTarget)return;
-            messages.push({id:Date.now(),senderId:currentUser.id,receiverId:currentChatTarget,content:inp.value.trim(),timestamp:Date.now(),attachments:[],read:false,pinned:false});
+            var content=inp.value.trim().slice(0,5000);
+            messages.push({id:Date.now(),senderId:currentUser.id,receiverId:currentChatTarget,content:content,timestamp:Date.now(),attachments:[],read:false,pinned:false});
             localStorage.setItem('asso_messages',JSON.stringify(messages));
-            archives.unshift({id:Date.now(),time:new Date().toLocaleString('fr-FR'),user:currentUser.name,content:inp.value.trim(),target:currentChatTarget,type:'message'});
+            archives.unshift({id:Date.now(),time:new Date().toLocaleString('fr-FR'),user:currentUser.name,content:content,target:currentChatTarget,type:'message'});
             inp.value='';renderMessages();renderMsgStats();
         }
         function insertEmoji(e){var inp=document.getElementById('msg-input');if(inp){inp.value+=e;inp.focus();}}
-        function pinMessage(id){for(var i=0;i<messages.length;i++){if(messages[i].id===id){messages[i].pinned=!messages[i].pinned;break;}}localStorage.setItem('asso_messages',JSON.stringify(messages));renderMessages();}
-        function deleteMessage(id){if(!confirm('Supprimer ce message?'))return;messages=messages.filter(function(m){return m.id!==id;});localStorage.setItem('asso_messages',JSON.stringify(messages));renderMessages();logAudit('Message supprimé #'+id);}
+        function pinMessage(id){if(!requireAuth())return;for(var i=0;i<messages.length;i++){if(messages[i].id===id&&(messages[i].senderId===currentUser.id||messages[i].receiverId===currentUser.id)){messages[i].pinned=!messages[i].pinned;break;}}localStorage.setItem('asso_messages',JSON.stringify(messages));renderMessages();}
+        function deleteMessage(id){if(!requireAuth())return;var message=messages.find(function(m){return m.id===id;});if(!message||(message.senderId!==currentUser.id&&message.receiverId!==currentUser.id))return alert('Accès refusé.');if(!confirm('Supprimer ce message?'))return;messages=messages.filter(function(m){return m.id!==id;});localStorage.setItem('asso_messages',JSON.stringify(messages));renderMessages();logAudit('Message supprimé #'+id);}
         function filterConversation(){renderMessages();}
-        function clearConversation(){if(!currentChatTarget||!confirm('Vider cette conversation?'))return;messages=messages.filter(function(m){return !((m.senderId===currentUser.id&&m.receiverId===currentChatTarget)||(m.senderId===currentChatTarget&&m.receiverId===currentUser.id));});localStorage.setItem('asso_messages',JSON.stringify(messages));renderMessages();logAudit('Conversation vidée');}
-        function exportMessages(){if(!currentChatTarget)return;var ms=messages.filter(function(m){return(m.senderId===currentUser.id&&m.receiverId===currentChatTarget)||(m.senderId===currentChatTarget&&m.receiverId===currentUser.id);});var txt=ms.map(function(m){return new Date(m.timestamp).toLocaleString('fr-FR')+' | '+(m.senderId===currentUser.id?'Moi':'Contact')+': '+m.content;}).join('\n');var b=new Blob([txt],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='conversation.txt';a.click();}
-        function renderMsgStats(){var el=document.getElementById('msg-stats');if(!el)return;var total=messages.length;var sent=messages.filter(function(m){return m.senderId===currentUser.id;}).length;var received=total-sent;var pinned=messages.filter(function(m){return m.pinned;}).length;var unread=messages.filter(function(m){return m.receiverId===currentUser.id&&!m.read;}).length;el.innerHTML='<div class="msg-stat"><div class="msg-stat-val">'+total+'</div><div class="msg-stat-label">Total</div></div><div class="msg-stat"><div class="msg-stat-val">'+sent+'</div><div class="msg-stat-label">Envoyés</div></div><div class="msg-stat"><div class="msg-stat-val">'+received+'</div><div class="msg-stat-label">Reçus</div></div><div class="msg-stat"><div class="msg-stat-val">'+unread+'</div><div class="msg-stat-label">Non lus</div></div><div class="msg-stat"><div class="msg-stat-val">'+pinned+'</div><div class="msg-stat-label">Épinglés</div></div>';}
-        function showMsgTab(tab){document.querySelectorAll('#messages .tab-btn').forEach(function(b,i){b.classList.toggle('active',i==={'chat':0,'archives':1,'groupes':2}[tab]);});document.getElementById('msg-tab-chat').style.display=tab==='chat'?'':'none';document.getElementById('msg-tab-archives').style.display=tab==='archives'?'':'none';document.getElementById('msg-tab-groupes').style.display=tab==='groupes'?'':'none';if(tab==='archives')renderArchives();if(tab==='groupes'){renderGroups();renderGroupMemberList();}}
+        function clearConversation(){if(!requireAuth()||!currentChatTarget||!confirm('Vider cette conversation?'))return;messages=messages.filter(function(m){return !((m.senderId===currentUser.id&&m.receiverId===currentChatTarget)||(m.senderId===currentChatTarget&&m.receiverId===currentUser.id));});localStorage.setItem('asso_messages',JSON.stringify(messages));renderMessages();logAudit('Conversation vidée');}
+        function exportMessages(){if(!requireAuth()||!currentChatTarget)return;var ms=messages.filter(function(m){return(m.senderId===currentUser.id&&m.receiverId===currentChatTarget)||(m.senderId===currentChatTarget&&m.receiverId===currentUser.id);});var txt=ms.map(function(m){return new Date(m.timestamp).toLocaleString('fr-FR')+' | '+(m.senderId===currentUser.id?'Moi':'Contact')+': '+m.content;}).join('\n');var b=new Blob([txt],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='conversation.txt';a.click();}
+        function renderMsgStats(){var el=document.getElementById('msg-stats');if(!el||!currentUser)return;var own=messages.filter(function(m){return m.senderId===currentUser.id||m.receiverId===currentUser.id;});var total=own.length;var sent=own.filter(function(m){return m.senderId===currentUser.id;}).length;var received=total-sent;var pinned=own.filter(function(m){return m.pinned;}).length;var unread=own.filter(function(m){return m.receiverId===currentUser.id&&!m.read;}).length;el.innerHTML='<div class="msg-stat"><div class="msg-stat-val">'+total+'</div><div class="msg-stat-label">Total</div></div><div class="msg-stat"><div class="msg-stat-val">'+sent+'</div><div class="msg-stat-label">Envoyés</div></div><div class="msg-stat"><div class="msg-stat-val">'+received+'</div><div class="msg-stat-label">Reçus</div></div><div class="msg-stat"><div class="msg-stat-val">'+unread+'</div><div class="msg-stat-label">Non lus</div></div><div class="msg-stat"><div class="msg-stat-val">'+pinned+'</div><div class="msg-stat-label">Épinglés</div></div>';}
+        function showMsgTab(tab){if(tab==='archives'&&!isAdmin(currentUser))return alert('Accès administrateur requis.');document.querySelectorAll('#messages .tab-btn').forEach(function(b,i){b.classList.toggle('active',i==={'chat':0,'archives':1,'groupes':2}[tab]);});document.getElementById('msg-tab-chat').style.display=tab==='chat'?'':'none';document.getElementById('msg-tab-archives').style.display=tab==='archives'?'':'none';document.getElementById('msg-tab-groupes').style.display=tab==='groupes'?'':'none';if(tab==='archives')renderArchives();if(tab==='groupes'){renderGroups();renderGroupMemberList();}}
         // --- ARCHIVES ---
-        function renderArchives(){var list=document.getElementById('archive-list');if(!list)return;var search=(document.getElementById('archive-search')||{}).value||'';var filter=(document.getElementById('archive-filter')||{}).value||'all';var filtered=archives.filter(function(a){if(filter!=='all'&&a.type!==filter)return false;if(search&&JSON.stringify(a).toLowerCase().indexOf(search.toLowerCase())===-1)return false;});document.getElementById('archive-stats').innerText=filtered.length+' entrée(s) trouvée(s)';list.innerHTML='';for(var i=0;i<Math.min(filtered.length,100);i++){var a=filtered[i];list.innerHTML+='<div class="msg-archive-item"><div><strong>'+escapeHtml(a.user||'')+'</strong> - '+escapeHtml(a.action||a.content||'')+'<div class="msg-archive-meta">'+escapeHtml(a.time)+'</div></div><span class="badge badge-info">'+escapeHtml(a.type)+'</span></div>';}}
-        function exportArchives(){var csv='Date,Utilisateur,Action,Type\n'+archives.map(function(a){return '"'+(a.time||'')+'","'+(a.user||'')+'","'+(a.action||a.content||'').replace(/"/g,'""')+'","'+(a.type||'')+'"';}).join('\n');var b=new Blob([csv],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='archives.csv';a.click();}
-        function clearArchives(){if(!confirm('Purger toutes les archives?'))return;archives=[];saveData();renderArchives();logAudit('Archives purgées');}
+        function renderArchives(){if(!isAdmin(currentUser))return;var list=document.getElementById('archive-list');if(!list)return;var search=(document.getElementById('archive-search')||{}).value||'';var filter=(document.getElementById('archive-filter')||{}).value||'all';var filtered=archives.filter(function(a){if(filter!=='all'&&a.type!==filter)return false;if(search&&JSON.stringify(a).toLowerCase().indexOf(search.toLowerCase())===-1)return false;});document.getElementById('archive-stats').innerText=filtered.length+' entrée(s) trouvée(s)';list.innerHTML='';for(var i=0;i<Math.min(filtered.length,100);i++){var a=filtered[i];list.innerHTML+='<div class="msg-archive-item"><div><strong>'+escapeHtml(a.user||'')+'</strong> - '+escapeHtml(a.action||a.content||'')+'<div class="msg-archive-meta">'+escapeHtml(a.time)+'</div></div><span class="badge badge-info">'+escapeHtml(a.type)+'</span></div>';}}
+        function exportArchives(){if(!requireAdmin())return;var csv='Date,Utilisateur,Action,Type\n'+archives.map(function(a){return [a.time,a.user,a.action||a.content,a.type].map(csvCell).join(',');}).join('\n');var b=new Blob([csv],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='archives.csv';a.click();}
+        function clearArchives(){if(!requireAdmin())return;if(!confirm('Purger toutes les archives?'))return;archives=[];saveData();renderArchives();logAudit('Archives purgées');}
         // --- GROUPES ---
-        function renderGroupMemberList(){var el=document.getElementById('group-member-list');if(!el)return;el.innerHTML='';for(var i=0;i<users.length;i++){if(users[i].id===(currentUser?currentUser.id:0))continue;el.innerHTML+='<label style="display:flex;gap:6px;align-items:center;padding:4px 0;"><input type="checkbox" value="'+users[i].id+'" class="group-member-cb" /> '+escapeHtml(users[i].name)+' <span class="badge badge-info">'+users[i].role+'</span></label>';}}
-        function createGroup(){var name=document.getElementById('group-name').value.trim();if(!name)return alert('Nom requis');var memberIds=[];document.querySelectorAll('.group-member-cb:checked').forEach(function(cb){memberIds.push(parseInt(cb.value));});if(memberIds.length===0)return alert('Sélectionnez au moins 1 membre');groups.push({id:Date.now(),name:name,members:memberIds,createdBy:currentUser.username,createdAt:new Date().toLocaleString('fr-FR')});saveData();document.getElementById('group-name').value='';renderGroups();renderGroupMemberList();logAudit('Groupe créé: '+name);alert('Groupe créé!');}
-        function renderGroups(){var el=document.getElementById('groups-list');if(!el)return;el.innerHTML='';if(groups.length===0){el.innerHTML='<p style="color:#999;">Aucun groupe créé.</p>';return;}for(var i=0;i<groups.length;i++){var g=groups[i];var memberNames=g.members.map(function(id){var u=users.find(function(x){return x.id===id;});return u?u.name:'?';}).join(', ');el.innerHTML+='<div class="card" style="margin-bottom:10px;padding:12px;"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>'+escapeHtml(g.name)+'</strong><span class="group-badge">'+g.members.length+' membres</span></div><div style="font-size:0.85rem;color:#666;margin-top:4px;">'+escapeHtml(memberNames)+'</div><div style="font-size:0.75rem;color:#999;">Créé par '+escapeHtml(g.createdBy)+' le '+escapeHtml(g.createdAt)+'</div><div style="margin-top:6px;"><button class="sm danger" onclick="deleteGroup('+g.id+')">🗑️ Supprimer</button></div></div>';}}
-        function deleteGroup(id){if(!confirm('Supprimer ce groupe?'))return;groups=groups.filter(function(g){return g.id!==id;});saveData();renderGroups();logAudit('Groupe supprimé');}
-        function renderProfile(){var el=document.getElementById('profile-info');if(!el||!currentUser)return;el.innerHTML='<div class="member-detail-card"><div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;"><div class="member-avatar" style="width:50px;height:50px;font-size:1.2rem;">'+currentUser.name.charAt(0).toUpperCase()+'</div><div><h4 style="margin:0;">'+escapeHtml(currentUser.name)+'</h4><span class="badge badge-info">'+(currentUser.role||'').toUpperCase()+'</span></div></div><div class="member-detail-row"><span>👤 Utilisateur:</span><span>'+escapeHtml(currentUser.username)+'</span></div><div class="member-detail-row"><span>📧 Email:</span><span>'+escapeHtml(currentUser.email||'N/A')+'</span></div><div class="member-detail-row"><span>📱 Téléphone:</span><span>'+(currentUser.phone||'N/A')+'</span></div><div class="member-detail-row"><span>📍 Adresse:</span><span>'+(currentUser.address||'N/A')+'</span></div><div class="member-detail-row"><span>💼 Profession:</span><span>'+(currentUser.job||'N/A')+'</span></div><div class="member-detail-row"><span>🎓 Promotion:</span><span>'+(currentUser.promo||'N/A')+'</span></div><div class="member-detail-row"><span>📅 Inscrit le:</span><span>'+(currentUser.joinDate||'N/A')+'</span></div></div>';}
-        function changePassword(){var o=document.getElementById('old-pwd').value,n=document.getElementById('new-pwd').value;if(o!==currentUser.password)return alert('Incorrect.');if(n.length<6)return alert('Min 6.');for(var i=0;i<users.length;i++){if(users[i].id===currentUser.id){users[i].password=n;break;}}currentUser.password=n;saveData();alert('OK');}
+        function renderGroupMemberList(){var el=document.getElementById('group-member-list');if(!el)return;el.innerHTML='';for(var i=0;i<users.length;i++){if(users[i].id===(currentUser?currentUser.id:0))continue;el.innerHTML+='<label style="display:flex;gap:6px;align-items:center;padding:4px 0;"><input type="checkbox" value="'+users[i].id+'" class="group-member-cb" /> '+escapeHtml(users[i].name)+' <span class="badge badge-info">'+escapeHtml(users[i].role)+'</span></label>';}}
+        function createGroup(){if(!requireAuth())return;var name=document.getElementById('group-name').value.trim().slice(0,120);if(!name)return alert('Nom requis');var memberIds=[];document.querySelectorAll('.group-member-cb:checked').forEach(function(cb){var id=parseInt(cb.value);if(users.some(function(user){return user.id===id;}))memberIds.push(id);});if(memberIds.length===0)return alert('Sélectionnez au moins 1 membre');groups.push({id:Date.now(),name:name,members:memberIds,createdById:currentUser.id,createdBy:currentUser.username,createdAt:new Date().toLocaleString('fr-FR')});saveData();document.getElementById('group-name').value='';renderGroups();renderGroupMemberList();logAudit('Groupe créé: '+name);alert('Groupe créé!');}
+        function renderGroups(){var el=document.getElementById('groups-list');if(!el)return;el.innerHTML='';if(groups.length===0){el.innerHTML='<p style="color:#999;">Aucun groupe créé.</p>';return;}for(var i=0;i<groups.length;i++){var g=groups[i],groupMembers=Array.isArray(g.members)?g.members:[];var memberNames=groupMembers.map(function(id){var u=users.find(function(x){return x.id===id;});return u?u.name:'?';}).join(', ');el.innerHTML+='<div class="card" style="margin-bottom:10px;padding:12px;"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>'+escapeHtml(g.name)+'</strong><span class="group-badge">'+groupMembers.length+' membres</span></div><div style="font-size:0.85rem;color:#666;margin-top:4px;">'+escapeHtml(memberNames)+'</div><div style="font-size:0.75rem;color:#999;">Créé par '+escapeHtml(g.createdBy)+' le '+escapeHtml(g.createdAt)+'</div><div style="margin-top:6px;"><button class="sm danger" onclick="deleteGroup('+g.id+')">🗑️ Supprimer</button></div></div>';}}
+        function deleteGroup(id){if(!requireAuth())return;var group=groups.find(function(g){return g.id===id;});if(!group)return;var ownsGroup=group.createdById===currentUser.id||!group.createdById&&group.createdBy===currentUser.username;if(!ownsGroup&&!isAdmin(currentUser))return alert('Accès refusé.');if(!confirm('Supprimer ce groupe?'))return;groups=groups.filter(function(g){return g.id!==id;});saveData();renderGroups();logAudit('Groupe supprimé');}
+        function renderProfile(){var el=document.getElementById('profile-info');if(!el||!currentUser)return;el.innerHTML='<div class="member-detail-card"><div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;"><div class="member-avatar" style="width:50px;height:50px;font-size:1.2rem;">'+escapeHtml((currentUser.name||'?').charAt(0).toUpperCase())+'</div><div><h4 style="margin:0;">'+escapeHtml(currentUser.name)+'</h4><span class="badge badge-info">'+escapeHtml((currentUser.role||'').toUpperCase())+'</span></div></div><div class="member-detail-row"><span>👤 Utilisateur:</span><span>'+escapeHtml(currentUser.username)+'</span></div><div class="member-detail-row"><span>📧 Email:</span><span>'+escapeHtml(currentUser.email||'N/A')+'</span></div><div class="member-detail-row"><span>📱 Téléphone:</span><span>'+escapeHtml(currentUser.phone||'N/A')+'</span></div><div class="member-detail-row"><span>📍 Adresse:</span><span>'+escapeHtml(currentUser.address||'N/A')+'</span></div><div class="member-detail-row"><span>💼 Profession:</span><span>'+escapeHtml(currentUser.job||'N/A')+'</span></div><div class="member-detail-row"><span>🎓 Promotion:</span><span>'+escapeHtml(currentUser.promo||'N/A')+'</span></div><div class="member-detail-row"><span>📅 Inscrit le:</span><span>'+escapeHtml(currentUser.joinDate||'N/A')+'</span></div></div>';}
+        async function changePassword(){if(!requireAuth())return;var o=document.getElementById('old-pwd').value,n=document.getElementById('new-pwd').value;if(!(await verifyUserPassword(currentUser,o)))return alert('Mot de passe actuel incorrect.');if(n.length<10||n.length>128)return alert('Mot de passe entre 10 et 128 caractères.');await setUserPassword(currentUser,n);saveData();document.getElementById('old-pwd').value='';document.getElementById('new-pwd').value='';alert('Mot de passe modifié.');}
         // --- PARAMÈTRES & MEMBRES ---
-        function showSettingsTab(tab){document.querySelectorAll('#parametres .tab-btn').forEach(function(b,i){b.classList.toggle('active',i==={'general':0,'membres':1,'donnees':2,'audit':3}[tab]);});['general','membres','donnees','audit'].forEach(function(t){var el=document.getElementById('settings-tab-'+t);if(el)el.style.display=t===tab?'':'none';});if(tab==='membres')renderUsersList();if(tab==='audit')renderAuditLog();if(tab==='donnees')renderGlobalStats();}
-        function loadSettings(){var el=document.getElementById('setting-name');if(el)el.value=settings.name||'';renderUsersList();renderGlobalStats();}
-        function saveSettings(){settings.name=document.getElementById('setting-name').value.trim()||'Asso';saveData();document.getElementById('app-name-display').innerText=settings.name;document.getElementById('footer-name').innerText=settings.name;logAudit('Paramètres modifiés');alert('Paramètres sauvegardés!');}
+        function showSettingsTab(tab){if(!requireAdmin())return;document.querySelectorAll('#parametres .tab-btn').forEach(function(b,i){b.classList.toggle('active',i==={'general':0,'membres':1,'donnees':2,'audit':3}[tab]);});['general','membres','donnees','audit'].forEach(function(t){var el=document.getElementById('settings-tab-'+t);if(el)el.style.display=t===tab?'':'none';});if(tab==='membres')renderUsersList();if(tab==='audit')renderAuditLog();if(tab==='donnees')renderGlobalStats();}
+        function loadSettings(){if(!isAdmin(currentUser))return;var el=document.getElementById('setting-name');if(el)el.value=settings.name||'';renderUsersList();renderGlobalStats();}
+        function saveSettings(){if(!requireAdmin())return;settings.name=document.getElementById('setting-name').value.trim().slice(0,120)||'Asso';saveData();document.getElementById('app-name-display').innerText=settings.name;document.getElementById('footer-name').innerText=settings.name;logAudit('Paramètres modifiés');alert('Paramètres sauvegardés!');}
         var BUREAU_ROLES = {
             'fondateur':{label:'👑 Fondateur',color:'#1a237e',bg:'#e8eaf6',order:0},
             'president':{label:'👑 Président',color:'#1a237e',bg:'#e8eaf6',order:1},
@@ -2096,17 +2153,17 @@ function printReceipt(){
                     if(u){
                         var cardClass=roleKey==='fondateur'?'president':roleKey;
                         html+='<div class="bureau-card '+cardClass+'">'+
-                            '<div class="bureau-avatar">'+(u.name||'?').charAt(0).toUpperCase()+'</div>'+
+                            '<div class="bureau-avatar">'+escapeHtml((u.name||'?').charAt(0).toUpperCase())+'</div>'+
                             '<div class="bureau-name">'+escapeHtml(u.name)+'</div>'+
                             '<div class="bureau-title">'+(u.email?escapeHtml(u.email):'')+'</div>'+
-                            '<div class="bureau-role-badge" style="background:'+brInfo.bg+';color:'+brInfo.color+';">'+brInfo.label+'</div>'+
+                            '<div class="bureau-role-badge" style="background:'+brInfo.bg+';color:'+brInfo.color+';">'+escapeHtml(brInfo.label)+'</div>'+
                             (u.phone?'<div style="font-size:0.75rem;color:#888;margin-top:4px;">📱 '+escapeHtml(u.phone)+'</div>':'')+
                         '</div>';
                     }else{
                         html+='<div class="bureau-card empty">'+
                             '<div class="bureau-avatar" style="background:#e0e0e0;color:#999;">?</div>'+
                             '<div class="bureau-name" style="color:#999;">Poste vacant</div>'+
-                            '<div class="bureau-role-badge" style="background:'+brInfo.bg+';color:'+brInfo.color+';">'+brInfo.label+'</div>'+
+                            '<div class="bureau-role-badge" style="background:'+brInfo.bg+';color:'+brInfo.color+';">'+escapeHtml(brInfo.label)+'</div>'+
                         '</div>';
                     }
                 }
@@ -2129,8 +2186,8 @@ function printReceipt(){
                 if(!m)continue;
                 html+='<div class="managed-member-item">'+
                     '<div class="managed-member-info">'+
-                        '<div class="managed-member-avatar">'+(m.name||'?').charAt(0).toUpperCase()+'</div>'+
-                        '<div><strong>'+escapeHtml(m.name)+'</strong><br><span style="font-size:0.8rem;color:#888;">'+(m.bureauRole?(BUREAU_ROLES[m.bureauRole]||{label:m.bureauRole}).label:'👤 Membre')+(m.job?' — '+escapeHtml(m.job):'')+'</span></div>'+
+                        '<div class="managed-member-avatar">'+escapeHtml((m.name||'?').charAt(0).toUpperCase())+'</div>'+
+                        '<div><strong>'+escapeHtml(m.name)+'</strong><br><span style="font-size:0.8rem;color:#888;">'+escapeHtml(m.bureauRole?(BUREAU_ROLES[m.bureauRole]||{label:m.bureauRole}).label:'👤 Membre')+(m.job?' — '+escapeHtml(m.job):'')+'</span></div>'+
                     '</div>'+
                     '<div style="display:flex;gap:4px;">'+
                         '<button class="sm ghost" onclick="viewMember('+m.id+')">👁️</button>'+
@@ -2160,7 +2217,7 @@ function printReceipt(){
             }else{alert('Ce membre est déjà assigné.');}
         }
         function unassignMember(mId){
-            if(!currentUser||!currentUser.managesMembers)return;
+            if(!currentUser||currentUser.role!=='admin'||!currentUser.managesMembers)return alert('Accès refusé.');
             if(!confirm('Désassigner ce membre de votre gestion ?'))return;
             currentUser.managesMembers=currentUser.managesMembers.filter(function(id){return id!==mId;});
             saveData();renderMyManagedMembers();
@@ -2193,6 +2250,7 @@ function printReceipt(){
             else alert('Choix invalide.');
         }
         function renderUsersList(){
+            if(!isAdmin(currentUser))return;
             var tb=document.getElementById('users-list');if(!tb)return;
             var search=(document.getElementById('member-search')||{}).value||'';
             var roleFilter=(document.getElementById('member-role-filter')||{}).value||'all';
@@ -2224,10 +2282,11 @@ function printReceipt(){
                 if(isAdmin&&u.id!==currentUser.id){actions+='<button class="sm primary" onclick="editMember('+u.id+')" title="Modifier">✏️</button>';actions+='<button class="sm danger" onclick="deleteUser('+u.id+')" title="Supprimer">🗑️</button>';}
                 if(isSuperAdmin&&u.id!==currentUser.id){actions+='<button class="sm secondary" onclick="promptBureauRole('+u.id+')" title="Attribuer rôle bureau">🏛️</button>';}
                 actions+='</div>';
-                tb.innerHTML+='<tr><td><div class="member-avatar">'+(u.name||u.username||'?').charAt(0).toUpperCase()+'</div></td><td><strong>'+escapeHtml(u.name||u.username)+'</strong></td><td>'+escapeHtml(u.username)+'</td><td><span class="badge '+(roleColors[u.role]||'badge-info')+'">'+u.role+'</span>'+(brLabel?' <span class="bureau-role-badge" style="font-size:0.7rem;">'+brLabel+'</span>':'')+'</td><td>'+(u.email||'-')+'</td><td>'+(u.phone||'-')+'</td><td>'+(u.joinDate||'-')+'</td><td><span class="badge badge-success">Actif</span></td><td>'+actions+'</td></tr>';
+                tb.innerHTML+='<tr><td><div class="member-avatar">'+escapeHtml((u.name||u.username||'?').charAt(0).toUpperCase())+'</div></td><td><strong>'+escapeHtml(u.name||u.username)+'</strong></td><td>'+escapeHtml(u.username)+'</td><td><span class="badge '+(roleColors[u.role]||'badge-info')+'">'+escapeHtml(u.role)+'</span>'+(brLabel?' <span class="bureau-role-badge" style="font-size:0.7rem;">'+escapeHtml(brLabel)+'</span>':'')+'</td><td>'+escapeHtml(u.email||'-')+'</td><td>'+escapeHtml(u.phone||'-')+'</td><td>'+escapeHtml(u.joinDate||'-')+'</td><td><span class="badge badge-success">Actif</span></td><td>'+actions+'</td></tr>';
             }
         }
         function openMemberModal(editId){
+            if(!requireAdmin())return;
             document.getElementById('member-edit-id').value=editId||'';
             document.getElementById('member-modal-title').innerText=editId?'✏️ Modifier le membre':'➕ Ajouter un membre';
             // Gestion dynamique des options admin pour superadmin uniquement
@@ -2278,84 +2337,98 @@ function printReceipt(){
             document.getElementById('member-modal').classList.add('active');
         }
         function closeMemberModal(){document.getElementById('member-modal').classList.remove('active');}
-        function saveMember(){
+        async function saveMember(){
+            if(!requireAdmin())return;
             var editId=document.getElementById('member-edit-id').value;
-            var name=document.getElementById('m-name').value.trim();var username=document.getElementById('m-username').value.trim();var email=document.getElementById('m-email').value.trim();
-            var phone=document.getElementById('m-phone').value.trim();var role=document.getElementById('m-role').value;var password=document.getElementById('m-password').value;
-            var address=document.getElementById('m-address').value.trim();var city=document.getElementById('m-city').value.trim();var birth=document.getElementById('m-birth').value;var gender=document.getElementById('m-gender').value;
-            var proStatus=document.getElementById('m-status').value;var job=document.getElementById('m-job').value.trim();var company=document.getElementById('m-company').value.trim();var sector=document.getElementById('m-sector').value.trim();
-            var level=document.getElementById('m-level').value;var promo=document.getElementById('m-promo').value.trim();var experience=document.getElementById('m-experience').value.trim();
-            var skills=document.getElementById('m-skills').value.trim();var bio=document.getElementById('m-bio').value.trim();var notes=document.getElementById('m-notes').value.trim();
+            var name=document.getElementById('m-name').value.trim().slice(0,120);var username=document.getElementById('m-username').value.trim();var email=document.getElementById('m-email').value.trim().slice(0,254);
+            var phone=document.getElementById('m-phone').value.trim().slice(0,30);var role=document.getElementById('m-role').value;var password=document.getElementById('m-password').value;
+            var address=document.getElementById('m-address').value.trim().slice(0,300);var city=document.getElementById('m-city').value.trim().slice(0,120);var birth=document.getElementById('m-birth').value;var gender=document.getElementById('m-gender').value;
+            var proStatus=document.getElementById('m-status').value;var job=document.getElementById('m-job').value.trim().slice(0,160);var company=document.getElementById('m-company').value.trim().slice(0,160);var sector=document.getElementById('m-sector').value.trim().slice(0,160);
+            var level=document.getElementById('m-level').value;var promo=document.getElementById('m-promo').value.trim().slice(0,120);var experience=document.getElementById('m-experience').value.trim().slice(0,5000);
+            var skills=document.getElementById('m-skills').value.trim().slice(0,1000);var bio=document.getElementById('m-bio').value.trim().slice(0,2000);var notes=document.getElementById('m-notes').value.trim().slice(0,2000);
             var bureauRoleEl=document.getElementById('m-bureau-role');var bureauRole=bureauRoleEl?bureauRoleEl.value:'';
             if(!name||!username)return alert('Nom et utilisateur requis.');
+            if(!/^[A-Za-z0-9._-]{3,40}$/.test(username)||!['membre','admin'].includes(role))return alert('Utilisateur ou rôle invalide.');
+            if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||phone&&!/^[+()0-9 .-]{6,30}$/.test(phone))return alert('Email ou téléphone invalide.');
+            if(birth&&!/^\d{4}-\d{2}-\d{2}$/.test(birth)||!['','M','F'].includes(gender)||!['','emploi','recherche','stage','etudiant','independant','entrepreneur','retraite'].includes(proStatus))return alert('Profil membre invalide.');
+            if(!['','president','tresorier','secretaire','adjoint','porte-parole','gestionnaire-crise','organisateur'].includes(bureauRole))return alert('Rôle du bureau invalide.');
             // Sécurité: seul le superadmin peut attribuer le rôle admin
             if(!currentUser||currentUser.role!=='superadmin'){
                 if(role==='admin')return alert('Accès refusé: seul le fondateur peut nommer des administrateurs.');
-                if(bureauRole==='fondateur')return alert('Accès refusé: le rôle fondateur est réservé.');
+                bureauRole='';
             }
+            if(bureauRole)role='admin';
             if(editId){
                 var u=users.find(function(x){return x.id===parseInt(editId);});
                 if(!u)return alert('Membre introuvable.');
+                if((u.role==='admin'||u.role==='superadmin')&&!isSuperAdmin(currentUser))return alert('Accès fondateur requis pour modifier ce compte.');
+                if(!isSuperAdmin(currentUser))bureauRole=u.bureauRole||'';
+                if(u.role==='superadmin')role='superadmin';
+                if(users.some(function(existing){return existing.id!==u.id&&existing.username===username;}))return alert('Ce nom d\'utilisateur existe déjà.');
+                if(bureauRole&&users.some(function(existing){return existing.id!==u.id&&existing.bureauRole===bureauRole;}))return alert('Ce poste du bureau est déjà occupé.');
                 u.name=name;u.username=username;u.email=email;u.phone=phone;u.role=role;u.address=address;u.city=city;u.birth=birth;u.gender=gender;u.proStatus=proStatus;u.job=job;u.company=company;u.sector=sector;u.level=level;u.promo=promo;u.experience=experience;u.skills=skills;u.bio=bio;u.notes=notes;u.bureauRole=bureauRole;
-                if(password&&password.length>=6)u.password=password;
+                if(password){if(password.length<10||password.length>128)return alert('Mot de passe entre 10 et 128 caractères.');await setUserPassword(u,password);}
                 logAudit('Membre modifié: '+username);
                 alert('Membre modifié!');
             }else{
-                if(!password||password.length<6)return alert('Mot de passe min 6 caractères.');
+                if(!password||password.length<10||password.length>128)return alert('Mot de passe entre 10 et 128 caractères.');
                 if(users.find(function(x){return x.username===username;}))return alert('Ce nom d\'utilisateur existe déjà.');
-                users.push({id:Date.now(),name:name,username:username,email:email,phone:phone,role:role,password:password,address:address,city:city,birth:birth,gender:gender,proStatus:proStatus,job:job,company:company,sector:sector,level:level,promo:promo,experience:experience,skills:skills,bio:bio,notes:notes,bureauRole:bureauRole,joinDate:new Date().toLocaleDateString('fr-FR'),canManageCash:bureauRole==='tresorier'});
+                if(bureauRole&&users.some(function(existing){return existing.bureauRole===bureauRole;}))return alert('Ce poste du bureau est déjà occupé.');
+                var member={id:Date.now(),name:name,username:username,email:email,phone:phone,role:role,address:address,city:city,birth:birth,gender:gender,proStatus:proStatus,job:job,company:company,sector:sector,level:level,promo:promo,experience:experience,skills:skills,bio:bio,notes:notes,bureauRole:bureauRole,joinDate:new Date().toLocaleDateString('fr-FR'),canManageCash:bureauRole==='tresorier'};
+                await setUserPassword(member,password);users.push(member);
                 logAudit('Membre ajouté: '+username);
                 alert('Membre ajouté!');
             }
             saveData();closeMemberModal();renderUsersList();
         }
-        function editMember(id){openMemberModal(id);}
+        function editMember(id){if(!requireAdmin())return;openMemberModal(id);}
         function viewMember(id){
+            if(!requireAuth())return;
             var u=users.find(function(x){return x.id===id;});if(!u)return;
             var statusLabels={'emploi':'💼 En poste','recherche':'🔍 En recherche','stage':'🎓 En stage','etudiant':'📚 Étudiant','independant':'🧑‍💻 Indépendant','entrepreneur':'🏢 Entrepreneur','retraite':'👴 Retraité'};
-            var msgCount=messages.filter(function(m){return m.senderId===id||m.receiverId===id;}).length;
+            var msgCount=messages.filter(function(m){return isAdmin(currentUser)?m.senderId===id||m.receiverId===id:(m.senderId===currentUser.id&&m.receiverId===id)||(m.senderId===id&&m.receiverId===currentUser.id);}).length;
             var txCount=transactions.filter(function(t){return(t.desc||'').toLowerCase().indexOf((u.name||'').toLowerCase())!==-1;}).length;
             var skHtml='';if(u.skills){var sk=u.skills.split(',');for(var i=0;i<sk.length;i++)skHtml+='<span class="skill-tag">'+escapeHtml(sk[i].trim())+'</span>';}
-            var html='<div class="member-detail-card"><div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;"><div class="member-avatar" style="width:56px;height:56px;font-size:1.4rem;">'+(u.name||'?').charAt(0).toUpperCase()+'</div><div><h4 style="margin:0;">'+escapeHtml(u.name)+'</h4><span class="badge badge-info">'+(u.role||'').toUpperCase()+'</span> '+(u.proStatus?'<span class="member-card-role '+(u.proStatus==='recherche'?'role-recherche':'role-emploi')+'">'+( statusLabels[u.proStatus]||u.proStatus)+'</span>':'')+'</div></div>';
+            var html='<div class="member-detail-card"><div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;"><div class="member-avatar" style="width:56px;height:56px;font-size:1.4rem;">'+escapeHtml((u.name||'?').charAt(0).toUpperCase())+'</div><div><h4 style="margin:0;">'+escapeHtml(u.name)+'</h4><span class="badge badge-info">'+escapeHtml((u.role||'').toUpperCase())+'</span> '+(u.proStatus?'<span class="member-card-role '+(u.proStatus==='recherche'?'role-recherche':'role-emploi')+'">'+escapeHtml(statusLabels[u.proStatus]||u.proStatus)+'</span>':'')+'</div></div>';
             html+='<h4 style="color:var(--primary);margin:10px 0 6px;border-bottom:1px solid var(--border);padding-bottom:4px;">👤 Informations personnelles</h4>';
             html+='<div class="member-detail-row"><span>👤 Utilisateur:</span><span>'+escapeHtml(u.username)+'</span></div>';
             html+='<div class="member-detail-row"><span>📧 Email:</span><span>'+escapeHtml(u.email||'N/A')+'</span></div>';
-            html+='<div class="member-detail-row"><span>📱 Téléphone:</span><span>'+(u.phone||'N/A')+'</span></div>';
-            html+='<div class="member-detail-row"><span>📍 Adresse:</span><span>'+(u.address||'N/A')+'</span></div>';
-            html+='<div class="member-detail-row"><span>🏙️ Ville:</span><span>'+(u.city||'N/A')+'</span></div>';
+            html+='<div class="member-detail-row"><span>📱 Téléphone:</span><span>'+escapeHtml(u.phone||'N/A')+'</span></div>';
+            html+='<div class="member-detail-row"><span>📍 Adresse:</span><span>'+escapeHtml(u.address||'N/A')+'</span></div>';
+            html+='<div class="member-detail-row"><span>🏙️ Ville:</span><span>'+escapeHtml(u.city||'N/A')+'</span></div>';
             html+='<div class="member-detail-row"><span>🎂 Naissance:</span><span>'+(u.birth?new Date(u.birth).toLocaleDateString('fr-FR'):'N/A')+'</span></div>';
             html+='<div class="member-detail-row"><span>🚬 Sexe:</span><span>'+(u.gender==='M'?'Masculin':u.gender==='F'?'Féminin':'N/A')+'</span></div>';
-            html+='<div class="member-detail-row"><span>📅 Inscrit le:</span><span>'+(u.joinDate||'N/A')+'</span></div>';
+            html+='<div class="member-detail-row"><span>📅 Inscrit le:</span><span>'+escapeHtml(u.joinDate||'N/A')+'</span></div>';
             html+='<h4 style="color:var(--secondary);margin:14px 0 6px;border-bottom:1px solid var(--border);padding-bottom:4px;">💼 Informations professionnelles</h4>';
-            html+='<div class="member-detail-row"><span>📊 Statut:</span><span>'+(statusLabels[u.proStatus]||'N/A')+'</span></div>';
-            html+='<div class="member-detail-row"><span>💼 Poste:</span><span>'+(u.job||'N/A')+'</span></div>';
-            html+='<div class="member-detail-row"><span>🏭 Entreprise:</span><span>'+(u.company||'N/A')+'</span></div>';
-            html+='<div class="member-detail-row"><span>🏢 Secteur:</span><span>'+(u.sector||'N/A')+'</span></div>';
-            html+='<div class="member-detail-row"><span>🎓 Niveau:</span><span>'+(u.level||'N/A')+'</span></div>';
-            html+='<div class="member-detail-row"><span>🎓 Promotion:</span><span>'+(u.promo||'N/A')+'</span></div>';
+            html+='<div class="member-detail-row"><span>📊 Statut:</span><span>'+escapeHtml(statusLabels[u.proStatus]||'N/A')+'</span></div>';
+            html+='<div class="member-detail-row"><span>💼 Poste:</span><span>'+escapeHtml(u.job||'N/A')+'</span></div>';
+            html+='<div class="member-detail-row"><span>🏭 Entreprise:</span><span>'+escapeHtml(u.company||'N/A')+'</span></div>';
+            html+='<div class="member-detail-row"><span>🏢 Secteur:</span><span>'+escapeHtml(u.sector||'N/A')+'</span></div>';
+            html+='<div class="member-detail-row"><span>🎓 Niveau:</span><span>'+escapeHtml(u.level||'N/A')+'</span></div>';
+            html+='<div class="member-detail-row"><span>🎓 Promotion:</span><span>'+escapeHtml(u.promo||'N/A')+'</span></div>';
             if(u.experience)html+='<div class="member-detail-row" style="flex-direction:column;gap:4px;"><span>📝 Expérience:</span><span style="color:#555;line-height:1.5;">'+escapeHtml(u.experience)+'</span></div>';
             if(skHtml)html+='<div class="member-detail-row" style="flex-direction:column;gap:4px;"><span>🛠️ Compétences:</span><div>'+skHtml+'</div></div>';
             if(u.bio)html+='<div class="member-detail-row" style="flex-direction:column;gap:4px;"><span>📝 Bio:</span><span style="font-style:italic;color:#666;">"'+escapeHtml(u.bio)+'"</span></div>';
             html+='<div class="member-detail-row"><span>💬 Messages:</span><span>'+msgCount+'</span></div>';
             html+='<div class="member-detail-row"><span>💰 Transactions liées:</span><span>'+txCount+'</span></div>';
-            if(u.notes)html+='<div class="member-detail-row"><span>📝 Notes admin:</span><span>'+escapeHtml(u.notes)+'</span></div>';
+            if(u.notes&&isAdmin(currentUser))html+='<div class="member-detail-row"><span>📝 Notes admin:</span><span>'+escapeHtml(u.notes)+'</span></div>';
             html+='</div>';
             document.getElementById('member-detail-content').innerHTML=html;
             document.getElementById('member-detail-modal').classList.add('active');
         }
-        function deleteUser(id){if(!confirm('Supprimer ce membre? Cette action est irréversible.'))return;var u=users.find(function(x){return x.id===id;});users=users.filter(function(u){return u.id!==id;});saveData();renderUsersList();logAudit('Membre supprimé: '+(u?u.username:id));alert('Membre supprimé.');}
-        function promoteUser(id){for(var i=0;i<users.length;i++){if(users[i].id===id){if(users[i].role==='membre')users[i].role='admin';else if(users[i].role==='admin')users[i].role='superadmin';break;}}saveData();renderUsersList();logAudit('Membre promu #'+id);}
-        function exportMembersCSV(){var rows=[['Nom','Utilisateur','Role','Email','Telephone','Ville','Adresse','Statut Pro','Poste','Entreprise','Secteur','Niveau','Promotion','Compétences','Bio','Inscription']];for(var i=0;i<users.length;i++){var u=users[i];rows.push([u.name||'',u.username||'',u.role||'',u.email||'',u.phone||'',u.city||'',u.address||'',u.proStatus||'',u.job||'',u.company||'',u.sector||'',u.level||'',u.promo||'',u.skills||'',u.bio||'',u.joinDate||'']);}var csv=rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\n');var b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='membres.csv';a.click();logAudit('Export CSV membres');}
-        function renderGlobalStats(){var el=document.getElementById('global-stats');if(!el)return;var r=0,d=0;for(var i=0;i<transactions.length;i++){if(transactions[i].status==='validated'){if(transactions[i].type==='recette')r+=transactions[i].amount;else d+=transactions[i].amount;}}el.innerHTML='<div class="member-detail-row"><span>👥 Total membres:</span><strong>'+users.length+'</strong></div><div class="member-detail-row"><span>💰 Total recettes:</span><strong>'+r.toLocaleString()+' FCFA</strong></div><div class="member-detail-row"><span>💸 Total dépenses:</span><strong>'+d.toLocaleString()+' FCFA</strong></div><div class="member-detail-row"><span>📊 Solde:</span><strong>'+(r-d).toLocaleString()+' FCFA</strong></div><div class="member-detail-row"><span>💬 Messages:</span><strong>'+messages.length+'</strong></div><div class="member-detail-row"><span>💼 Opportunités:</span><strong>'+opportunities.length+'</strong></div><div class="member-detail-row"><span>📦 Archives:</span><strong>'+archives.length+'</strong></div><div class="member-detail-row"><span>👥 Groupes:</span><strong>'+groups.length+'</strong></div>';}
-        function renderAuditLog(){var el=document.getElementById('audit-log');if(!el)return;var search=(document.getElementById('audit-search')||{}).value||'';el.innerHTML='';var count=0;for(var i=0;i<auditLog.length&&count<100;i++){var a=auditLog[i];if(search&&(a.user+a.action).toLowerCase().indexOf(search.toLowerCase())===-1)continue;el.innerHTML+='<div style="padding:6px 0;font-size:0.85rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;"><span><b>'+escapeHtml(a.time)+'</b> | '+escapeHtml(a.user)+'</span><span>'+escapeHtml(a.action)+'</span></div>';count++;}}
-        function clearAuditLog(){if(!confirm('Vider le journal d\'audit?'))return;auditLog=[];saveData();renderAuditLog();}
-        function exportAllData(){var b=new Blob([JSON.stringify({users:users,transactions:transactions,messages:messages,settings:settings,auditLog:auditLog,opportunities:opportunities,archives:archives,groups:groups},null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='backup_'+new Date().toISOString().split('T')[0]+'.json';a.click();logAudit('Export complet');}
-        function importData(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){try{var d=JSON.parse(e.target.result);if(d.users)users=d.users;if(d.transactions)transactions=d.transactions;if(d.messages)messages=d.messages;if(d.settings)settings=d.settings;if(d.auditLog)auditLog=d.auditLog;if(d.opportunities)opportunities=d.opportunities;if(d.archives)archives=d.archives;if(d.groups)groups=d.groups;saveData();logAudit('Import données');alert('Données importées!');location.reload();}catch(err){alert('Fichier invalide: '+err.message);}};r.readAsText(f);}
+        function deleteUser(id){if(!requireAdmin())return;var u=users.find(function(x){return x.id===id;});if(!u)return;if(u.id===currentUser.id)return alert('Vous ne pouvez pas supprimer votre propre compte.');if((u.role==='admin'||u.role==='superadmin')&&!isSuperAdmin(currentUser))return alert('Accès fondateur requis.');if(!confirm('Supprimer ce membre? Cette action est irréversible.'))return;users=users.filter(function(user){return user.id!==id;});saveData();renderUsersList();logAudit('Membre supprimé: '+u.username);alert('Membre supprimé.');}
+        function promoteUser(id){if(!requireSuperAdmin())return;for(var i=0;i<users.length;i++){if(users[i].id===id&&users[i].role==='membre'){users[i].role='admin';break;}}saveData();renderUsersList();logAudit('Membre promu #'+id);}
+        function exportMembersCSV(){if(!requireAdmin())return;var rows=[['Nom','Utilisateur','Role','Email','Telephone','Ville','Adresse','Statut Pro','Poste','Entreprise','Secteur','Niveau','Promotion','Compétences','Bio','Inscription']];for(var i=0;i<users.length;i++){var u=users[i];rows.push([u.name||'',u.username||'',u.role||'',u.email||'',u.phone||'',u.city||'',u.address||'',u.proStatus||'',u.job||'',u.company||'',u.sector||'',u.level||'',u.promo||'',u.skills||'',u.bio||'',u.joinDate||'']);}var csv=rows.map(function(r){return r.map(csvCell).join(',');}).join('\n');var b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='membres.csv';a.click();logAudit('Export CSV membres');}
+        function renderGlobalStats(){if(!isAdmin(currentUser))return;var el=document.getElementById('global-stats');if(!el)return;var r=0,d=0;for(var i=0;i<transactions.length;i++){if(transactions[i].status==='validated'){if(transactions[i].type==='recette')r+=Number(transactions[i].amount)||0;else d+=Number(transactions[i].amount)||0;}}el.innerHTML='<div class="member-detail-row"><span>👥 Total membres:</span><strong>'+users.length+'</strong></div><div class="member-detail-row"><span>💰 Total recettes:</span><strong>'+r.toLocaleString()+' FCFA</strong></div><div class="member-detail-row"><span>💸 Total dépenses:</span><strong>'+d.toLocaleString()+' FCFA</strong></div><div class="member-detail-row"><span>📊 Solde:</span><strong>'+(r-d).toLocaleString()+' FCFA</strong></div><div class="member-detail-row"><span>💬 Messages:</span><strong>'+messages.length+'</strong></div><div class="member-detail-row"><span>💼 Opportunités:</span><strong>'+opportunities.length+'</strong></div><div class="member-detail-row"><span>📦 Archives:</span><strong>'+archives.length+'</strong></div><div class="member-detail-row"><span>👥 Groupes:</span><strong>'+groups.length+'</strong></div>';}
+        function renderAuditLog(){if(!isAdmin(currentUser))return;var el=document.getElementById('audit-log');if(!el)return;var search=(document.getElementById('audit-search')||{}).value||'';el.innerHTML='';var count=0;for(var i=0;i<auditLog.length&&count<100;i++){var a=auditLog[i];if(search&&(a.user+a.action).toLowerCase().indexOf(search.toLowerCase())===-1)continue;el.innerHTML+='<div style="padding:6px 0;font-size:0.85rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;"><span><b>'+escapeHtml(a.time)+'</b> | '+escapeHtml(a.user)+'</span><span>'+escapeHtml(a.action)+'</span></div>';count++;}}
+        function clearAuditLog(){if(!requireAdmin())return;if(!confirm('Vider le journal d\'audit?'))return;auditLog=[];saveData();renderAuditLog();}
+        function exportAllData(){if(!requireSuperAdmin())return;var safeUsers=users.map(function(u){var copy=Object.assign({},u);delete copy.password;return copy;});var b=new Blob([JSON.stringify({users:safeUsers,transactions:transactions,messages:messages,settings:settings,auditLog:auditLog,opportunities:opportunities,archives:archives,groups:groups},null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='backup_'+new Date().toISOString().split('T')[0]+'.json';a.click();logAudit('Export complet');}
+        function importData(ev){if(!requireSuperAdmin()){ev.target.value='';return;}var f=ev.target.files[0];if(!f)return;if(f.size>2*1024*1024){alert('Fichier trop volumineux (2 Mo max).');ev.target.value='';return;}var r=new FileReader();r.onload=function(e){try{var d=JSON.parse(e.target.result);if(!d||typeof d!=='object'||Array.isArray(d))throw new Error('Structure JSON invalide.');['users','transactions','messages','auditLog','opportunities','archives','groups'].forEach(function(key){if(d[key]&&!Array.isArray(d[key]))throw new Error(key+' doit être une liste.');if(d[key]&&d[key].length>5000)throw new Error(key+' contient trop d’éléments.');if(d[key])d[key].forEach(function(item){if(!item||typeof item!=='object'||Array.isArray(item))throw new Error(key+' contient une entrée invalide.');if(Object.prototype.hasOwnProperty.call(item,'id')&&(typeof item.id!=='number'||!Number.isSafeInteger(item.id)))throw new Error(key+' contient un identifiant invalide.');});});if(d.users){d.users.forEach(function(imported){delete imported.password;if(!Number.isSafeInteger(imported.id)||typeof imported.username!=='string'||imported.username.length<1||imported.username.length>120||/[\u0000-\u001F\u007F]/.test(imported.username)||!['membre','admin','superadmin'].includes(imported.role))throw new Error('Un compte importé est invalide.');if(!/^[A-Za-z0-9+/]{43}=$/.test(imported.passwordHash||'')||!/^[A-Za-z0-9+/]{22}==$/.test(imported.passwordSalt||'')||!Number.isSafeInteger(imported.passwordIterations)||imported.passwordIterations<100000||imported.passwordIterations>1000000)throw new Error('Un compte importé ne contient pas de mot de passe sécurisé.');});users=d.users;}if(d.transactions)transactions=d.transactions;if(d.messages)messages=d.messages;if(d.settings&&typeof d.settings==='object'&&!Array.isArray(d.settings))settings=d.settings;if(d.auditLog)auditLog=d.auditLog;if(d.opportunities)opportunities=d.opportunities;if(d.archives)archives=d.archives;if(d.groups)groups=d.groups;saveData();logAudit('Import données');alert('Données importées!');location.reload();}catch(err){alert('Fichier invalide: '+err.message);}finally{ev.target.value='';}};r.readAsText(f);}
         function updateThemeImages(){ try{ var isDark=document.documentElement.getAttribute('data-theme')==='dark'; document.querySelectorAll('.theme-illustration').forEach(function(img){ var light=img.getAttribute('data-light'); var dark=img.getAttribute('data-dark'); if(isDark && dark){ if(img.src!==dark)img.src=dark; } else if(light){ if(img.src!==light)img.src=light; } }); }catch(e){console.error('updateThemeImages error',e);} }
         function toggleDarkMode(){var isD=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',isD?'':'dark');localStorage.setItem('asso_dark',isD?'0':'1');var cb=document.getElementById('set-dark-mode');if(cb)cb.checked=!isD; try{ updateThemeImages(); }catch(e){} }
-        function exportTransactionsCSV(){var rows=[['id','date','type','cat','desc','amount','status']];for(var i=0;i<transactions.length;i++){var t=transactions[i];rows.push([t.id,t.date,t.type,t.cat,t.desc,t.amount,t.status]);}var csv=rows.map(function(r){return r.join(',');}).join('\n');var b=new Blob([csv],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tx.csv';a.click();}
+        function exportTransactionsCSV(){if(!requireAuth())return;var rows=[['id','date','type','cat','desc','amount','status']];for(var i=0;i<transactions.length;i++){var t=transactions[i];rows.push([t.id,t.date,t.type,t.cat,t.desc,t.amount,t.status]);}var csv=rows.map(function(r){return r.map(csvCell).join(',');}).join('\n');var b=new Blob([csv],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tx.csv';a.click();}
         function bulkValidatePending(){if(!canManageCash(currentUser))return alert('Refus.');var ch=0;for(var i=0;i<transactions.length;i++){if(transactions[i].status==='pending'){transactions[i].status='validated';ch++;}}if(ch){saveData();renderTransactions();renderDashboard();alert(ch+' validees');}else{alert('Rien.');}}
-        (function init(){ startClock(); if(localStorage.getItem('asso_dark')==='1')document.documentElement.setAttribute('data-theme','dark'); try{ updateThemeImages(); }catch(e){} try{var saved=sessionStorage.getItem('asso_currentUser');if(saved){var s=JSON.parse(saved);var fresh=users.find(function(u){return u.username===s.username&&u.password===s.password;});if(fresh){currentUser=fresh;showApp();}else{sessionStorage.removeItem('asso_currentUser');}}}catch(e){console.log('Auto-login error:',e);} })();
+        (async function init(){startClock();if(localStorage.getItem('asso_dark')==='1')document.documentElement.setAttribute('data-theme','dark');try{updateThemeImages();}catch(e){}try{var migrated=false;for(var i=0;i<users.length;i++){if(typeof users[i].password==='string'){await setUserPassword(users[i],users[i].password);migrated=true;}}if(migrated)saveData();var saved=sessionStorage.getItem('asso_currentUser');if(saved){var s=JSON.parse(saved);var fresh=users.find(function(u){return u.id===s.id&&u.username===s.username;});if(fresh){currentUser=fresh;storeSession(fresh);showApp();}else{sessionStorage.removeItem('asso_currentUser');}}}catch(e){sessionStorage.removeItem('asso_currentUser');}})();
     </script>
 </body>
 </html>
