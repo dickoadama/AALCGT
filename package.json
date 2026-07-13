@@ -1,0 +1,19 @@
+{
+  "name": "aalcgt",
+  "version": "1.0.0",
+  "description": "Site AALCGT - application de gestion d'association (page unique).",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "assets/js/**/*.js"
+    ]
+  }
+}
