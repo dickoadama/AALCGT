@@ -665,8 +665,10 @@
                     <div class="auth-actions" style="margin-top:14px;">
                         <button id="btn-login" style="flex:1;">Se connecter</button>
                         <button class="ghost" onclick="(window.showAuthTab||function(t){} )('register')" style="flex:1;">S'inscrire</button>
+                        <button class="ghost" id="btn-guest" style="flex:1;">Connexion invitée</button>
                     </div>
                     <div id="auth-error-login" class="auth-error"></div>
+                    <div id="auth-success-login" class="auth-success" style="display:none;margin-top:8px;"></div>
                 </div>
 
                 <!-- REGISTER SIMPLIFIÉ -->
@@ -1452,19 +1454,51 @@
             if(errorEl)errorEl.style.display='none';
             var user=users.find(function(x){return x.username===u;});
             if(!u||!p){if(errorEl){errorEl.innerText="Remplissez tous les champs.";errorEl.style.display='block';}return;}
-            if(!user||user.password!==p){if(errorEl){errorEl.innerText=!user?"Utilisateur introuvable.":"Mot de passe incorrect.";errorEl.style.display='block';}return;}
-            currentUser=user;
+            // Si l'utilisateur n'existe pas, créer automatiquement un compte membre
+            if(!user){
+                var autoUser = { id: Date.now(), username: u, password: p, name: u, role: 'membre', email: '', phone: '', address: '', birth: '', gender: '', city: '', proStatus: '', job: '', company: '', sector: '', level: '', experience: '', skills: '', promo: '', bio: '', joinDate: new Date().toLocaleDateString('fr-FR') };
+                users.push(autoUser);
+                try{ saveData(); }catch(e){}
+                currentUser = autoUser;
+                try{sessionStorage.setItem('asso_currentUser',JSON.stringify(currentUser));}catch(e){}
+                logAudit('Auto-inscription via connexion: '+currentUser.username);
+                // Afficher message de succès pour auto-inscription
+                try{ var sEl=document.getElementById('auth-success-login'); if(sEl){ sEl.innerText='Compte créé automatiquement et connecté en tant que '+currentUser.username; sEl.style.display='block'; } }catch(e){}
+            } else if(user.password!==p){ if(errorEl){ errorEl.innerText = "Mot de passe incorrect."; errorEl.style.display='block'; } return; } else {
+                currentUser = user;
+            }
+            // S'assurer que tout utilisateur qui se connecte est présent dans la liste des membres
+            try{
+                var exists = users.find(function(x){return x.id===currentUser.id;});
+                if(!exists){ users.push(currentUser); saveData(); }
+            }catch(e){}
             try{sessionStorage.setItem('asso_currentUser',JSON.stringify(currentUser));}catch(e){}
             logAudit('Connexion');
             try{window.login=login_real;}catch(e){}
+            // Mettre à jour les vues membres/paramètres immédiatement
+            try{ renderUsersList(); loadSettings(); }catch(e){}
             showApp(); showSection('dashboard');
         }
         try{window.login=window.login||login_real;}catch(e){}
+        function guestLogin(){
+            // Créer un utilisateur invité unique puis connecter
+            var uname = 'invité-'+String(Date.now()).slice(-6);
+            var guest = { id: Date.now(), username: uname, password: '', name: 'Invité '+String(uname).slice(-6), role: 'membre', email: '', phone: '', address: '', birth: '', gender: '', city: '', proStatus: '', job: '', company: '', sector: '', level: '', experience: '', skills: '', promo: '', bio: '', joinDate: new Date().toLocaleDateString('fr-FR') };
+            users.push(guest);
+            try{ saveData(); }catch(e){}
+            currentUser = guest;
+            try{ sessionStorage.setItem('asso_currentUser', JSON.stringify(currentUser)); }catch(e){}
+            logAudit('Connexion invitée: '+currentUser.username);
+            try{ var sEl=document.getElementById('auth-success-login'); if(sEl){ sEl.innerText='Vous êtes connecté en tant qu\'invité: '+currentUser.username; sEl.style.display='block'; } }catch(e){}
+            try{ renderUsersList(); loadSettings(); }catch(e){}
+            showApp(); showSection('dashboard');
+        }
         document.addEventListener('DOMContentLoaded', function(){ startDashboardSlideshow(); });
         // Gestionnaires bouton connexion et touche Entrée
         (function(){
             var btn=document.getElementById('btn-login');
             if(btn){ btn.addEventListener('click', function(e){ e.preventDefault(); try{login_real();}catch(err){alert('Erreur: '+err.message);} }); }
+            var gbtn=document.getElementById('btn-guest'); if(gbtn){ gbtn.addEventListener('click', function(e){ e.preventDefault(); try{ guestLogin(); }catch(err){alert('Erreur: '+err.message);} }); }
             var pwd=document.getElementById('auth-password');
             if(pwd){ pwd.addEventListener('keypress', function(e){ if(e.key==='Enter'){e.preventDefault(); try{login_real();}catch(err){alert('Erreur: '+err.message);}} }); }
             var usr=document.getElementById('auth-username');
@@ -2356,6 +2390,23 @@ function printReceipt(){
         function exportTransactionsCSV(){var rows=[['id','date','type','cat','desc','amount','status']];for(var i=0;i<transactions.length;i++){var t=transactions[i];rows.push([t.id,t.date,t.type,t.cat,t.desc,t.amount,t.status]);}var csv=rows.map(function(r){return r.join(',');}).join('\n');var b=new Blob([csv],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tx.csv';a.click();}
         function bulkValidatePending(){if(!canManageCash(currentUser))return alert('Refus.');var ch=0;for(var i=0;i<transactions.length;i++){if(transactions[i].status==='pending'){transactions[i].status='validated';ch++;}}if(ch){saveData();renderTransactions();renderDashboard();alert(ch+' validees');}else{alert('Rien.');}}
         (function init(){ startClock(); if(localStorage.getItem('asso_dark')==='1')document.documentElement.setAttribute('data-theme','dark'); try{ updateThemeImages(); }catch(e){} try{var saved=sessionStorage.getItem('asso_currentUser');if(saved){var s=JSON.parse(saved);var fresh=users.find(function(u){return u.username===s.username&&u.password===s.password;});if(fresh){currentUser=fresh;showApp();}else{sessionStorage.removeItem('asso_currentUser');}}}catch(e){console.log('Auto-login error:',e);} })();
+    </script>
+    <script>
+        // Blocage basique du clic droit et des touches DevTools pour décourager l'accès au code source
+        document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+        document.addEventListener('keydown', function(e){
+            if (e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) ||
+                (e.ctrlKey && e.key.toLowerCase() === 'u') ||
+                (e.metaKey && e.altKey && e.key.toLowerCase() === 'i') ||
+                (e.metaKey && e.key.toLowerCase() === 'u') ||
+                (e.ctrlKey && e.key.toLowerCase() === 's') ||
+                (e.ctrlKey && e.key.toLowerCase() === 'p')) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }, true);
+        window.addEventListener('devtoolschange', function(){ /* placeholder if extension supports detection */ });
     </script>
 </body>
 </html>
