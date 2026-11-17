@@ -41,6 +41,16 @@
         return typeof request.body === 'string' ? JSON.parse(request.body || '{}') : request.body;
     }
 
+    function authRedirectUrl() {
+        const redirectUrl = global.AALCGT_SUPABASE_CONFIG && global.AALCGT_SUPABASE_CONFIG.redirectUrl;
+        if (!redirectUrl) {
+            const error = new Error('Renseignez l’URL de redirection GitHub Pages dans supabase-config.js.');
+            error.status = 503;
+            throw error;
+        }
+        return redirectUrl;
+    }
+
     function publicProfile(row) {
         return Object.assign({}, row.profile_json || row.profile_json_public || {}, {
             id: row.id,
@@ -177,7 +187,7 @@
                 email,
                 password: body.password,
                 options: {
-                    emailRedirectTo: global.location.href,
+                    emailRedirectTo: authRedirectUrl(),
                     data: { username: body.username, name: body.name, phone: body.phone }
                 }
             });
@@ -202,7 +212,7 @@
         if (path === '/auth/forgot-password') {
             const email = String(body.email || '').trim().toLowerCase();
             if (!email) throw new Error('Saisissez votre adresse e-mail.');
-            const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: global.location.href });
+            const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: authRedirectUrl() });
             if (error) fail(error);
             return { sent: true };
         }
@@ -212,7 +222,7 @@
             const { error } = await db.auth.resend({
                 type: 'signup',
                 email,
-                options: { emailRedirectTo: global.location.href }
+                options: { emailRedirectTo: authRedirectUrl() }
             });
             if (error) fail(error);
             return { sent: true };
