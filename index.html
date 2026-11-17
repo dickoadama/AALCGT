@@ -693,7 +693,7 @@
                     </div>
                     <div id="auth-error-register" class="auth-error"></div>
                     <div id="auth-success-register" class="auth-success"></div>
-                    <button id="btn-resend-confirmation" class="small-link" onclick="resendConfirmation()" style="display:none;">Renvoyer le lien de confirmation</button>
+                    <button id="btn-resend-confirmation" class="small-link" onclick="resendConfirmation()">Déjà inscrit mais pas confirmé ? Renvoyer le lien</button>
                 </div>
 
                 <!-- FORGOT -->
@@ -1659,7 +1659,6 @@
         async function registerUser(){
             var u=document.getElementById('reg-username').value.trim(),e=document.getElementById('reg-email').value.trim(),p=document.getElementById('reg-password').value,pc=document.getElementById('reg-password-confirm').value;
             var errEl=document.getElementById('auth-error-register'),sucEl=document.getElementById('auth-success-register');errEl.style.display='none';sucEl.style.display='none';
-            document.getElementById('btn-resend-confirmation').style.display='none';
             var fullname=document.getElementById('reg-fullname').value.trim(),phone=document.getElementById('reg-phone').value.trim();
             if(!u||!fullname||!phone||!e||!p){errEl.innerText='Veuillez remplir tous les champs obligatoires (*).';errEl.style.display='block';return;}
             if(!/^[a-zA-Z0-9._-]{3,32}$/.test(u)){errEl.innerText='Le nom d’utilisateur doit contenir 3 à 32 caractères (lettres, chiffres, point, tiret ou soulignement).';errEl.style.display='block';return;}
@@ -1669,7 +1668,6 @@
                 var result=await apiRequest('/auth/register',{method:'POST',body:JSON.stringify({username:u,name:fullname,phone:phone,email:e,password:p})});
                 sucEl.innerText=result.requiresEmailConfirmation?'✅ Vérifiez votre boîte e-mail et confirmez votre adresse avant de vous connecter.':'✅ Compte créé avec succès ! Vous pouvez maintenant vous connecter.';
                 sucEl.style.display='block';
-                document.getElementById('btn-resend-confirmation').style.display=result.requiresEmailConfirmation?'inline-block':'none';
                 if(!result.requiresEmailConfirmation)setTimeout(function(){showAuthTab('login');},2500);
             }catch(error){errEl.innerText=error.message;errEl.style.display='block';}
         }
