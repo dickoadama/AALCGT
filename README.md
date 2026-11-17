@@ -13,12 +13,13 @@ Application de gestion de l’association. L’interface se connecte directement
    ```js
    window.AALCGT_SUPABASE_CONFIG = {
        url: 'https://VOTRE-PROJET.supabase.co',
-       anonKey: 'VOTRE-CLE-PUBLIQUE'
+       anonKey: 'VOTRE-CLE-PUBLIQUE',
+       redirectUrl: 'https://dickoadama.github.io/AALCGT/'
    };
    ```
 
    La clé publique est destinée au navigateur et ne donne accès qu’aux opérations permises par RLS. N’insérez jamais une clé `service_role`, un mot de passe ou une chaîne PostgreSQL dans ce fichier.
-4. Dans **Authentication → URL Configuration**, définissez la **Site URL** à `https://dickoadama.github.io/AALCGT/` et ajoutez `https://dickoadama.github.io/AALCGT/**` aux **Redirect URLs**. Le formulaire de confirmation et la réinitialisation utilisent l’adresse de la page ouverte. Si un ancien lien de confirmation pointe vers `localhost`, corrigez ces URL puis utilisez **Renvoyer le lien** dans l’onglet Inscription; l’ancien courriel restera invalide.
+4. Dans **Authentication → URL Configuration**, définissez la **Site URL** à `https://dickoadama.github.io/AALCGT/` et ajoutez `https://dickoadama.github.io/AALCGT/**` aux **Redirect URLs**. Les courriels utilisent cette redirection fixe, même si le formulaire est ouvert localement. Si un ancien lien pointe vers `localhost`, corrigez ces URL puis utilisez **Renvoyer le lien** dans l’onglet Inscription; l’ancien courriel restera invalide.
 5. Le site est publié automatiquement par GitHub Pages à chaque mise à jour de la branche `main` : [https://dickoadama.github.io/AALCGT/](https://dickoadama.github.io/AALCGT/). La connexion à Supabase requiert Internet; aucun serveur Express n’est nécessaire.
 
 ## Premier super-administrateur
